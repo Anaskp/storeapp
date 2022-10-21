@@ -1,5 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../section/sections.dart';
 
 class HomeSccreen extends StatelessWidget {
   const HomeSccreen({Key? key}) : super(key: key);
@@ -8,9 +9,11 @@ class HomeSccreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
                 height: 50,
@@ -23,12 +26,20 @@ class HomeSccreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     children: [
-                      Expanded(
-                        child: Text('Search for a product,category'),
+                      const Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Search for a product,category',
+                            hintStyle: TextStyle(
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
                       ),
                       IconButton(
                         onPressed: () {},
-                        icon: Icon(
+                        icon: const Icon(
                           Icons.search,
                         ),
                       ),
@@ -36,6 +47,23 @@ class HomeSccreen extends StatelessWidget {
                   ),
                 ),
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              CarouselSection(),
+              const SizedBox(
+                height: 10,
+              ),
+              const Text(
+                'Explore by Category',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              CategorySection(),
             ],
           ),
         ),
