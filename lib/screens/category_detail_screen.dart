@@ -13,23 +13,15 @@ class CategoryDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.green[100],
       body: SafeArea(
         child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Image.asset(
-                    path,
-                    height: 150,
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
                 Text(
                   name,
                   style: const TextStyle(
@@ -39,7 +31,8 @@ class CategoryDetailScreen extends StatelessWidget {
                 const SizedBox(
                   height: 10,
                 ),
-                GridView(
+                GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     childAspectRatio: 0.8,
@@ -47,34 +40,83 @@ class CategoryDetailScreen extends StatelessWidget {
                     mainAxisSpacing: 10,
                   ),
                   shrinkWrap: true,
-                  children: [
-                    Container(
+                  itemCount: 10,
+                  itemBuilder: (context, index) {
+                    return Container(
                       decoration: BoxDecoration(
-                        color: Colors.green[100],
+                        color: Colors.white,
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.all(12),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset(path),
+                            Expanded(
+                              child: Align(
+                                  alignment: Alignment.center,
+                                  child: Image.asset(path)),
+                            ),
                             Text(
                               name,
                               maxLines: 2,
                             ),
-                            Text('250ml'),
+                            Text(
+                              '250ml',
+                              style: TextStyle(
+                                fontSize: 11,
+                              ),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '₹295',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    Text(
+                                      '₹260',
+                                    ),
+                                  ],
+                                ),
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(8),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey[500]!,
+                                        offset: Offset(4, 4),
+                                        blurRadius: 20,
+                                        spreadRadius: 1,
+                                      ),
+                                      BoxShadow(
+                                        color: Colors.white,
+                                        offset: Offset(-4, -4),
+                                        blurRadius: 20,
+                                        spreadRadius: 1,
+                                      ),
+                                    ],
+                                  ),
+                                  child: IconButton(
+                                    icon: Icon(Icons.add),
+                                    onPressed: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.green[100],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ],
+                    );
+                  },
                 ),
               ],
             ),

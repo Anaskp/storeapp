@@ -43,6 +43,7 @@ class CategorySection extends StatelessWidget {
                     child: Text(
                       categoryList[index].name,
                       maxLines: 2,
+                      style: TextStyle(fontSize: 12),
                     ),
                   ),
                   Expanded(

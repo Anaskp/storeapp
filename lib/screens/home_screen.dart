@@ -57,7 +57,8 @@ class HomeSccreen extends StatelessWidget {
               const Text(
                 'Explore by Category',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400,
                 ),
               ),
               const SizedBox(
