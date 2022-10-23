@@ -1,4 +1,5 @@
 import 'package:e_store/model/category_model.dart';
+import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 class CategorySection extends StatelessWidget {
@@ -11,34 +12,46 @@ class CategorySection extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
+        crossAxisCount: 4,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: 0.9,
+        childAspectRatio: 0.8,
       ),
       itemBuilder: (context, index) {
-        return Container(
-          decoration: BoxDecoration(
-            color: Colors.green[100],
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(5),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(
-                  child: Text(
-                    categoryList[index].name,
-                    maxLines: 2,
-                  ),
+        return InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => CategoryDetailScreen(
+                  name: categoryList[index].name,
+                  path: categoryList[index].path,
                 ),
-                Expanded(
-                  child: Image.asset(
-                    categoryList[index].path,
+              ),
+            );
+          },
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.green[100],
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Text(
+                      categoryList[index].name,
+                      maxLines: 2,
+                    ),
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Image.asset(
+                      categoryList[index].path,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         );
