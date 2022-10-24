@@ -1,3 +1,4 @@
+import 'package:e_store/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 class CategoryDetailScreen extends StatelessWidget {
@@ -42,77 +43,92 @@ class CategoryDetailScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: 10,
                   itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Align(
-                                  alignment: Alignment.center,
-                                  child: Image.asset(path)),
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => ProductDetailScreen(
+                              name: name,
+                              path: path,
                             ),
-                            Text(
-                              name,
-                              maxLines: 2,
-                            ),
-                            Text(
-                              '250ml',
-                              style: TextStyle(
-                                fontSize: 11,
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: Align(
+                                    alignment: Alignment.center,
+                                    child: Image.asset(path)),
                               ),
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '₹295',
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        decoration: TextDecoration.lineThrough,
-                                        color: Colors.grey[700],
-                                      ),
-                                    ),
-                                    Text(
-                                      '₹260',
-                                    ),
-                                  ],
+                              Text(
+                                name,
+                                maxLines: 2,
+                              ),
+                              Text(
+                                '250ml',
+                                style: TextStyle(
+                                  fontSize: 11,
                                 ),
-                                DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey[500]!,
-                                        offset: Offset(4, 4),
-                                        blurRadius: 20,
-                                        spreadRadius: 1,
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '₹295',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          decoration:
+                                              TextDecoration.lineThrough,
+                                          color: Colors.grey[700],
+                                        ),
                                       ),
-                                      BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(-4, -4),
-                                        blurRadius: 20,
-                                        spreadRadius: 1,
+                                      Text(
+                                        '₹260',
                                       ),
                                     ],
                                   ),
-                                  child: IconButton(
-                                    icon: Icon(Icons.add),
-                                    onPressed: () {},
+                                  DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey[500]!,
+                                          offset: Offset(4, 4),
+                                          blurRadius: 20,
+                                          spreadRadius: 1,
+                                        ),
+                                        BoxShadow(
+                                          color: Colors.white,
+                                          offset: Offset(-4, -4),
+                                          blurRadius: 20,
+                                          spreadRadius: 1,
+                                        ),
+                                      ],
+                                    ),
+                                    child: IconButton(
+                                      icon: Icon(Icons.add),
+                                      onPressed: () {},
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

@@ -4,3 +4,4 @@ export 'cart_screen.dart';
 export 'home_screen.dart';
 export 'search_screen.dart';
 export 'category_detail_screen.dart';
+export 'product_detail_screen.dart';
