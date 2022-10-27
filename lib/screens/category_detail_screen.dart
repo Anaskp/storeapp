@@ -73,7 +73,7 @@ class CategoryDetailScreen extends StatelessWidget {
                                 name,
                                 maxLines: 2,
                               ),
-                              Text(
+                              const Text(
                                 '250ml',
                                 style: TextStyle(
                                   fontSize: 11,
@@ -112,7 +112,7 @@ class CategoryDetailScreen extends StatelessWidget {
                                           blurRadius: 20,
                                           spreadRadius: 1,
                                         ),
-                                        BoxShadow(
+                                        const BoxShadow(
                                           color: Colors.white,
                                           offset: Offset(-4, -4),
                                           blurRadius: 20,
@@ -121,7 +121,10 @@ class CategoryDetailScreen extends StatelessWidget {
                                       ],
                                     ),
                                     child: IconButton(
-                                      icon: Icon(Icons.add),
+                                      icon: const Icon(
+                                        Icons.add,
+                                        color: Colors.pink,
+                                      ),
                                       onPressed: () {},
                                     ),
                                   ),
