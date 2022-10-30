@@ -28,7 +28,7 @@ class ProfileScreen extends StatelessWidget {
                   tileWidget(
                     Icons.shopping_bag,
                     'Orders',
-                    ProfileDetailScreen(),
+                    OrderScreen(),
                     context,
                   ),
                   tileWidget(

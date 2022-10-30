@@ -117,7 +117,7 @@ class ProductDetailScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                height: 270,
+                height: 250,
                 color: Colors.green[50],
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -139,7 +139,7 @@ class ProductDetailScreen extends StatelessWidget {
                       height: 10,
                     ),
                     SizedBox(
-                      height: 200,
+                      height: 180,
                       width: double.infinity,
                       child: ListView.separated(
                         physics: const BouncingScrollPhysics(),
@@ -158,7 +158,7 @@ class ProductDetailScreen extends StatelessWidget {
                             );
                           } else {
                             return Container(
-                              width: 160,
+                              width: 140,
                               decoration: BoxDecoration(
                                 boxShadow: [
                                   BoxShadow(
