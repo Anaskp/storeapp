@@ -48,7 +48,7 @@ class CartScreen extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('314'),
+                  Text('₹314'),
                   ElevatedButton(
                     onPressed: () {},
                     child: Padding(
@@ -96,29 +96,31 @@ class CartScreen extends StatelessWidget {
                               IconButton(
                                 onPressed: () {},
                                 icon: Icon(
-                                  Icons.add,
+                                  Icons.remove,
                                 ),
                               ),
-                              Text('0'),
+                              Text('1'),
                               IconButton(
                                 onPressed: () {},
                                 icon: Icon(
-                                  Icons.remove,
+                                  Icons.add,
                                 ),
                               ),
                             ],
                           ),
                         ),
                         SizedBox(
-                          width: 10,
+                          width: 15,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('35'),
+                            Text('₹35'),
                             Text(
-                              '40',
+                              '₹40',
                               style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey[700],
                                 decoration: TextDecoration.lineThrough,
                               ),
                             ),

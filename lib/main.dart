@@ -19,12 +19,13 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitDown,
     ]);
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Poppins',
         primarySwatch: Colors.green,
         primaryColor: Colors.green[400],
       ),
-      home: MainScreen(),
+      home: MobileLogin(),
     );
   }
 }

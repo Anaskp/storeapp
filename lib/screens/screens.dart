@@ -7,3 +7,5 @@ export 'category_detail_screen.dart';
 export 'product_detail_screen.dart';
 export 'profile_detail_screen.dart';
 export 'order_screen.dart';
+export 'mobile_number_screen.dart';
+export 'otp_screen.dart';

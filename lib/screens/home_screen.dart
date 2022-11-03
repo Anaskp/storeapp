@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../section/sections.dart';
+import '../widgets/widgets.dart';
 
 class HomeSccreen extends StatelessWidget {
   const HomeSccreen({Key? key}) : super(key: key);
@@ -10,63 +11,54 @@ class HomeSccreen extends StatelessWidget {
     return SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 50,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12),
-                  child: Row(
-                    children: [
-                      const Expanded(
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: 'Search for a product,category',
-                            hintStyle: TextStyle(
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: const Icon(
-                          Icons.search,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
               ),
-              const SizedBox(
-                height: 10,
-              ),
-              CarouselSection(),
-              const SizedBox(
-                height: 10,
-              ),
-              const Text(
-                'Explore by Category',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              CategorySection(),
-            ],
-          ),
+              child: SearchWidget(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            CarouselSection(),
+            const SizedBox(
+              height: 10,
+            ),
+            ScrollProductSection(
+              color: Colors.green[50]!,
+              name: 'Chocolate',
+              path: 'assets/images/sweet.png',
+              title: 'Trending Products near you',
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: CategorySection(),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            ScrollProductSection(
+              color: Colors.green[50]!,
+              name: 'Biscuit',
+              path: 'assets/images/biscuit.png',
+              title: 'New Arrivals',
+            ),
+            ScrollProductSection(
+              color: Colors.grey[200]!,
+              name: 'Tomato',
+              path: 'assets/images/veg.png',
+              title: 'Your daily greens',
+            ),
+          ],
         ),
       ),
     );

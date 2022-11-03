@@ -1,6 +1,8 @@
 import 'package:e_store/screens/product_detail_screen.dart';
 import 'package:flutter/material.dart';
 
+import '../widgets/widgets.dart';
+
 class CategoryDetailScreen extends StatelessWidget {
   const CategoryDetailScreen({
     Key? key,
@@ -43,98 +45,7 @@ class CategoryDetailScreen extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: 10,
                   itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => ProductDetailScreen(
-                              name: name,
-                              path: path,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Expanded(
-                                child: Align(
-                                    alignment: Alignment.center,
-                                    child: Image.asset(path)),
-                              ),
-                              Text(
-                                name,
-                                maxLines: 2,
-                              ),
-                              const Text(
-                                '250ml',
-                                style: TextStyle(
-                                  fontSize: 11,
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        '₹295',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          decoration:
-                                              TextDecoration.lineThrough,
-                                          color: Colors.grey[700],
-                                        ),
-                                      ),
-                                      Text(
-                                        '₹260',
-                                      ),
-                                    ],
-                                  ),
-                                  DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey[500]!,
-                                          offset: Offset(4, 4),
-                                          blurRadius: 20,
-                                          spreadRadius: 1,
-                                        ),
-                                        const BoxShadow(
-                                          color: Colors.white,
-                                          offset: Offset(-4, -4),
-                                          blurRadius: 20,
-                                          spreadRadius: 1,
-                                        ),
-                                      ],
-                                    ),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.add,
-                                        color: Colors.pink,
-                                      ),
-                                      onPressed: () {},
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                    return ProductCard(name: name, path: path);
                   },
                 ),
               ],

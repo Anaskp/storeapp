@@ -1,4 +1,7 @@
+import 'package:e_store/widgets/widgets.dart';
 import 'package:flutter/material.dart';
+
+import '../section/sections.dart';
 
 class ProductDetailScreen extends StatelessWidget {
   const ProductDetailScreen(
@@ -116,126 +119,11 @@ class ProductDetailScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              Container(
-                height: 250,
-                color: Colors.green[50],
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.only(left: 8),
-                      child: Text(
-                        'Similar products',
-                        style: TextStyle(
-                          fontWeight: FontWeight.w400,
-                          fontSize: 18,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    SizedBox(
-                      height: 180,
-                      width: double.infinity,
-                      child: ListView.separated(
-                        physics: const BouncingScrollPhysics(),
-                        scrollDirection: Axis.horizontal,
-                        separatorBuilder: (context, index) {
-                          return const SizedBox(
-                            width: 15,
-                          );
-                        },
-                        shrinkWrap: true,
-                        itemCount: 10,
-                        itemBuilder: (context, index) {
-                          if (index == 0) {
-                            return const SizedBox(
-                              width: 10,
-                            );
-                          } else {
-                            return Container(
-                              width: 140,
-                              decoration: BoxDecoration(
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey[300]!,
-                                      blurRadius: 8,
-                                      spreadRadius: 0.1),
-                                ],
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(12),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Align(
-                                          alignment: Alignment.center,
-                                          child: Image.asset(path)),
-                                    ),
-                                    Text(
-                                      name,
-                                      maxLines: 2,
-                                    ),
-                                    const Text(
-                                      '250ml',
-                                      style: TextStyle(
-                                        fontSize: 11,
-                                      ),
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        const Text(
-                                          '₹260',
-                                        ),
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            color: Colors.white,
-                                            borderRadius:
-                                                BorderRadius.circular(8),
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.grey[500]!,
-                                                offset: const Offset(4, 4),
-                                                blurRadius: 20,
-                                                spreadRadius: 1,
-                                              ),
-                                              const BoxShadow(
-                                                color: Colors.white,
-                                                offset: Offset(-4, -4),
-                                                blurRadius: 20,
-                                                spreadRadius: 1,
-                                              ),
-                                            ],
-                                          ),
-                                          child: IconButton(
-                                            icon: const Icon(
-                                              Icons.add,
-                                              color: Colors.pink,
-                                            ),
-                                            onPressed: () {},
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ],
-                ),
+              ScrollProductSection(
+                color: Colors.green[50]!,
+                name: name,
+                path: path,
+                title: 'Similar products',
               ),
             ],
           ),
