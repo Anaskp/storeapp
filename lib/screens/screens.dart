@@ -9,3 +9,4 @@ export 'profile_detail_screen.dart';
 export 'order_screen.dart';
 export 'mobile_number_screen.dart';
 export 'otp_screen.dart';
+export 'address_screen.dart';

@@ -1,4 +1,3 @@
-import 'package:e_store/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
 import '../section/sections.dart';

@@ -34,13 +34,7 @@ class ProfileScreen extends StatelessWidget {
                   tileWidget(
                     Icons.home,
                     'Address',
-                    ProfileDetailScreen(),
-                    context,
-                  ),
-                  tileWidget(
-                    Icons.notifications,
-                    'Notifications',
-                    ProfileDetailScreen(),
+                    AddressScreen(),
                     context,
                   ),
                 ],
