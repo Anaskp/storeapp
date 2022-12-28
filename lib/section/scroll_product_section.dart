@@ -59,7 +59,12 @@ class ScrollProductSection extends StatelessWidget {
                     width: 10,
                   );
                 } else {
-                  return ProductCard(name: name, path: path);
+                  // return ProductCard(
+                  //   name: name,
+                  //   path: path,
+                  // );
+
+                  return SizedBox();
                 }
               },
             ),

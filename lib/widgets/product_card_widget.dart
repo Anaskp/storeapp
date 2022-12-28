@@ -1,16 +1,13 @@
+import 'package:e_store/providers/providers.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../screens/screens.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
     Key? key,
-    required this.name,
-    required this.path,
   }) : super(key: key);
-
-  final String name;
-  final String path;
 
   @override
   Widget build(BuildContext context) {
@@ -18,10 +15,7 @@ class ProductCard extends StatelessWidget {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(
-              name: name,
-              path: path,
-            ),
+            builder: (context) => ProductDetailScreen(),
           ),
         );
       },
@@ -38,10 +32,11 @@ class ProductCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Align(
-                    alignment: Alignment.center, child: Image.asset(path)),
+                    alignment: Alignment.center,
+                    child: Image.network(context.watch<ProductProvider>().url)),
               ),
               Text(
-                name,
+                context.watch<ProductProvider>().name,
                 maxLines: 2,
               ),
               const Text(
@@ -57,7 +52,7 @@ class ProductCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '₹295',
+                        context.watch<ProductProvider>().originalPrice,
                         style: TextStyle(
                           fontSize: 10,
                           decoration: TextDecoration.lineThrough,
@@ -65,7 +60,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '₹260',
+                        context.watch<ProductProvider>().salePrice,
                       ),
                     ],
                   ),

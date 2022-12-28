@@ -1,9 +1,12 @@
-import 'package:e_store/model/category_model.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 class CategorySection extends StatelessWidget {
-  const CategorySection({Key? key}) : super(key: key);
+  CategorySection({Key? key}) : super(key: key);
+
+  final category =
+      FirebaseFirestore.instance.collection('category').snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -23,55 +26,87 @@ class CategorySection extends StatelessWidget {
         const SizedBox(
           height: 10,
         ),
-        GridView.builder(
-          itemCount: categoryList.length,
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 4,
-            crossAxisSpacing: 10,
-            mainAxisSpacing: 10,
-            childAspectRatio: 0.8,
-          ),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => CategoryDetailScreen(
-                      name: categoryList[index].name,
-                      path: categoryList[index].path,
-                    ),
-                  ),
+        StreamBuilder(
+          stream: category,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.connectionState == ConnectionState.active ||
+                snapshot.connectionState == ConnectionState.done) {
+              if (snapshot.hasError) {
+                return const Center(
+                  child: Text('Something got error'),
                 );
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.green[100],
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Expanded(
-                        child: Text(
-                          categoryList[index].name,
-                          maxLines: 2,
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ),
-                      Expanded(
-                        child: Image.asset(
-                          categoryList[index].path,
-                        ),
-                      ),
-                    ],
+              } else if (snapshot.data!.docs.isEmpty) {
+                return const Center(
+                  child: Text('No categories'),
+                );
+              } else if (snapshot.hasData) {
+                return GridView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  physics: const NeverScrollableScrollPhysics(),
+                  shrinkWrap: true,
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 10,
+                    mainAxisSpacing: 10,
+                    childAspectRatio: 0.9,
                   ),
-                ),
-              ),
-            );
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot documentSnapshot =
+                        snapshot.data!.docs[index];
+                    return InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CategoryDetailScreen(
+                              categoryName: documentSnapshot['name'],
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.green[100],
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  documentSnapshot['name'],
+                                  maxLines: 2,
+                                  style: const TextStyle(fontSize: 12),
+                                ),
+                              ),
+                              Expanded(
+                                child: Image.network(
+                                  documentSnapshot['url'],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              } else {
+                return const Center(
+                  child: Text('No Categories'),
+                );
+              }
+            } else {
+              return Center(
+                child: Text(snapshot.connectionState.toString()),
+              );
+            }
           },
         ),
       ],

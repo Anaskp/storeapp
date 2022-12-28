@@ -72,8 +72,9 @@ class OtpScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => MainScreen()));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (context) => MainScreen()),
+                      (route) => false);
                 },
                 child: Text('Submit'),
               ),
