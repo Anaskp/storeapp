@@ -32,9 +32,8 @@ class HomeSccreen extends StatelessWidget {
             ),
             ScrollProductSection(
               color: Colors.green[50]!,
-              name: 'Chocolate',
-              path: 'assets/images/sweet.png',
-              title: 'Trending Products near you',
+              name: 'Fruits',
+              title: 'Go Fresh Fruits',
             ),
             const SizedBox(
               height: 10,
@@ -48,14 +47,11 @@ class HomeSccreen extends StatelessWidget {
             ),
             ScrollProductSection(
               color: Colors.green[50]!,
-              name: 'Biscuit',
-              path: 'assets/images/biscuit.png',
               title: 'New Arrivals',
             ),
             ScrollProductSection(
               color: Colors.grey[200]!,
-              name: 'Tomato',
-              path: 'assets/images/veg.png',
+              name: 'Vegetables',
               title: 'Your daily greens',
             ),
           ],

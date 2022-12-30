@@ -78,12 +78,11 @@ class CategorySection extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Expanded(
-                                child: Text(
-                                  documentSnapshot['name'],
-                                  maxLines: 2,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
+                              Text(
+                                documentSnapshot['name'],
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2,
+                                style: const TextStyle(fontSize: 12),
                               ),
                               Expanded(
                                 child: Image.network(

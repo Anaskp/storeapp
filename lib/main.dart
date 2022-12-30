@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         primaryColor: Colors.green[400],
       ),
-      home: MobileLogin(),
+      home: MainScreen(),
     );
   }
 }

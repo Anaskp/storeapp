@@ -35,7 +35,7 @@ class ProductDetailScreen extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '125ml',
+                      '${context.watch<ProductProvider>().qty} ${context.watch<ProductProvider>().qtyMeasure}',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     Row(
@@ -121,8 +121,7 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               ScrollProductSection(
                 color: Colors.green[50]!,
-                name: context.watch<ProductProvider>().url,
-                path: context.watch<ProductProvider>().url,
+                name: context.watch<ProductProvider>().category,
                 title: 'Similar products',
               ),
             ],

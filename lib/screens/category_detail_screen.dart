@@ -4,8 +4,6 @@ import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/widgets.dart';
-
 class CategoryDetailScreen extends StatefulWidget {
   CategoryDetailScreen({
     Key? key,
@@ -92,7 +90,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
 
                             return InkWell(
                               onTap: () async {
-                                bool nav = await context
+                                await context
                                     .read<ProductProvider>()
                                     .showProduct(documentSnapshot.id, context);
 
@@ -124,8 +122,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                         documentSnapshot['name'],
                                         maxLines: 2,
                                       ),
-                                      const Text(
-                                        '250ml',
+                                      Text(
+                                        '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
                                         style: TextStyle(
                                           fontSize: 11,
                                         ),

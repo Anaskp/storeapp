@@ -86,8 +86,9 @@ class MobileLogin extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).push(
-                        MaterialPageRoute(builder: (context) => OtpScreen()));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(builder: (context) => OtpScreen()),
+                        (route) => false);
                   },
                   child: Text('Continue'),
                 ),

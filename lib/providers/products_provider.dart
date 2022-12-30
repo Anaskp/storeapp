@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 class ProductProvider with ChangeNotifier {
@@ -10,6 +9,9 @@ class ProductProvider with ChangeNotifier {
   String _originalPrice = '';
   String _desc = '';
   String _offer = '';
+  String _qty = '';
+  String _qtyMeasure = '';
+  String _category = '';
 
   String get name => _name;
   String get url => _url;
@@ -17,6 +19,9 @@ class ProductProvider with ChangeNotifier {
   String get originalPrice => _originalPrice;
   String get desc => _desc;
   String get offer => _offer;
+  String get qty => _qty;
+  String get qtyMeasure => _qtyMeasure;
+  String get category => _category;
 
   Future<bool> showProduct(String uid, context) async {
     showDialog(
@@ -37,6 +42,9 @@ class ProductProvider with ChangeNotifier {
         _salePrice = value.data()!['salePrice'];
         _desc = value.data()!['desc'];
         _offer = value.data()!['offer'];
+        _qty = value.data()!['qty'];
+        _qtyMeasure = value.data()!['qtyMeasure'];
+        _category = value.data()!['categories'][0];
         notifyListeners();
       });
     } catch (e) {
