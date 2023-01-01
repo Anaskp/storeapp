@@ -1,5 +1,6 @@
 import 'package:e_store/providers/providers.dart';
 import 'package:e_store/screens/main_screen.dart';
+import 'package:e_store/screens/profile_detail_screen.dart';
 import 'package:e_store/utils/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -146,7 +147,7 @@ class OtpScreen extends StatelessWidget {
 
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => MainScreen(),
+                    builder: (context) => ProfileDetailScreen(),
                   ),
                   (route) => false);
             }
