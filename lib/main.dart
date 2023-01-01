@@ -18,6 +18,9 @@ Future<void> main() async {
         ChangeNotifierProvider(
           create: (_) => ProductProvider(),
         ),
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider(),
+        ),
       ],
       child: MyApp(),
     ),
@@ -42,7 +45,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         primaryColor: Colors.green[400],
       ),
-      home: MainScreen(),
+      home: MobileLogin(),
     );
   }
 }

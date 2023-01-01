@@ -1,17 +1,19 @@
-import 'package:e_store/screens/screens.dart';
+import 'package:e_store/providers/auth_provider.dart';
+import 'package:e_store/utils/utils.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:provider/provider.dart';
 
 class MobileLogin extends StatelessWidget {
-  const MobileLogin({Key? key}) : super(key: key);
+  MobileLogin({Key? key}) : super(key: key);
+
+  TextEditingController phoneController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         width: MediaQuery.of(context).size.width,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           image: DecorationImage(
             fit: BoxFit.cover,
             image: AssetImage('assets/images/background.png'),
@@ -60,6 +62,7 @@ class MobileLogin extends StatelessWidget {
                       ),
                       Expanded(
                           child: TextField(
+                        controller: phoneController,
                         maxLength: 10,
                         keyboardType: TextInputType.number,
                         decoration: InputDecoration(
@@ -85,12 +88,14 @@ class MobileLogin extends StatelessWidget {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                        MaterialPageRoute(builder: (context) => OtpScreen()),
-                        (route) => false);
+                  onPressed: () async {
+                    if (phoneController.text.length == 10) {
+                      sendPhoneNumber(context);
+                    } else {
+                      showSnackBar(context, 'Enter 10 digit mobile number');
+                    }
                   },
-                  child: Text('Continue'),
+                  child: const Text('Continue'),
                 ),
               ),
             ],
@@ -98,5 +103,12 @@ class MobileLogin extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  void sendPhoneNumber(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+    String number = '+91${phoneController.text.trim()}';
+
+    ap.signInWithPhone(context, number);
   }
 }
