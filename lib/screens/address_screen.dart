@@ -1,3 +1,4 @@
+import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
 
 class AddressScreen extends StatelessWidget {
@@ -52,8 +53,12 @@ class AddressScreen extends StatelessWidget {
         child: SizedBox(
           height: 50,
           child: ElevatedButton(
-            onPressed: () {},
-            child: Text('Add new address'),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NewAddressScreen(),
+              ));
+            },
+            child: const Text('Add new address'),
           ),
         ),
       ),

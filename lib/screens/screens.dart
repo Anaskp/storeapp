@@ -12,3 +12,4 @@ export 'otp_screen.dart';
 export 'address_screen.dart';
 export 'product_detail_screen.dart';
 export 'splash_screen.dart';
+export 'new_address_screen.dart';
