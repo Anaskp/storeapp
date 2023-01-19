@@ -14,8 +14,19 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? _userId;
   String get userId => _userId!;
+  String? _userName;
+  String get name => _userName!;
+  String? _userEmail;
+  String get email => _userEmail!;
+  late Map<String, dynamic> _address;
+  Map<String, dynamic> get address => _address;
 
   void signInWithPhone(BuildContext context, String phoneNumber) async {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return Center(child: CircularProgressIndicator());
+        });
     try {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneNumber,
@@ -79,15 +90,80 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<bool> saveUser(BuildContext context, String name, String email) async {
+  Future<bool> saveUser(BuildContext context, String name, String email,
+      [bool newUser = true]) async {
     bool userAdded = false;
+
     try {
       UserModel user = UserModel(name: name, email: email);
-      firestore.collection('users').doc().set(user.toJson());
-      userAdded = true;
+      if (newUser) {
+        firestore.collection('users').doc(userId).set(user.toJson());
+        userAdded = true;
+        _userName = name;
+        _userEmail = email;
+        notifyListeners();
+      } else {
+        firestore
+            .collection('users')
+            .doc(userId)
+            .update(user.toJson())
+            .then((value) {
+          userAdded = true;
+          _userName = name;
+          _userEmail = email;
+          notifyListeners();
+        });
+      }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
     return userAdded;
+  }
+
+  Future<bool> addAddress(BuildContext context, String house, String street,
+      String pin, String city, String state,
+      [bool newUser = true]) async {
+    bool addressAdded = false;
+    print('infirst ${addressAdded}');
+
+    try {
+      AddressModel addressModel = AddressModel(
+        house: house,
+        street: street,
+        pin: pin,
+        city: city,
+        state: state,
+      );
+
+      if (newUser) {
+        firestore
+            .collection('users')
+            .doc(userId)
+            .collection('address')
+            .doc('address')
+            .set(addressModel.toJson())
+            .then((value) {
+          //_address = addressModel.toJson();
+          notifyListeners();
+        });
+      } else {
+        firestore
+            .collection('users')
+            .doc(userId)
+            .collection('address')
+            .doc('address')
+            .update(addressModel.toJson())
+            .then((value) {
+          //  _address = addressModel.toJson();
+          notifyListeners();
+        });
+      }
+
+      addressAdded = true;
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+
+    return addressAdded;
   }
 }

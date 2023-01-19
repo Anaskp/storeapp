@@ -10,7 +10,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   List _pages = [
-    HomeSccreen(),
+    HomeScreen(),
     SearchScreen(),
     CartScreen(),
     ProfileScreen(),

@@ -190,8 +190,6 @@ class _OtpScreenState extends State<OtpScreen> {
                   (route) => false);
             }
           });
-
-          // bool isExist =await ap.checkExistingUser();
         });
   }
 }
@@ -210,6 +208,7 @@ class OtpInput extends StatelessWidget {
       height: 60,
       width: 50,
       child: TextField(
+          textAlign: TextAlign.center,
           controller: textEditingController,
           autofocus: autofocus,
           maxLength: 1,

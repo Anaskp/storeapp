@@ -1,4 +1,4 @@
-import 'package:e_store/screens/new_address_screen.dart';
+import 'package:e_store/screens/screens.dart';
 import 'package:e_store/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -78,14 +78,34 @@ class ProfileDetailScreen extends StatelessWidget {
   saveUser(context) {
     final ap = Provider.of<AuthProvider>(context, listen: false);
     if (_nameController.text != '' && _emailController.text != '') {
-      ap
-          .saveUser(context, _nameController.text, _emailController.text)
-          .then((value) {
-        if (value == true) {
-          Navigator.of(context).push(
-              MaterialPageRoute(builder: (context) => NewAddressScreen()));
-        }
-      });
+      showDialog(
+          context: context,
+          builder: (context) {
+            return Center(child: CircularProgressIndicator());
+          });
+      if (newUser) {
+        ap
+            .saveUser(
+          context,
+          _nameController.text,
+          _emailController.text,
+        )
+            .then((value) {
+          if (value == true) {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => NewAddressScreen(
+                      newUser: true,
+                    )));
+          }
+        });
+      } else {
+        ap
+            .saveUser(
+                context, _nameController.text, _emailController.text, false)
+            .then((value) {
+          Navigator.of(context).pop();
+        });
+      }
     } else {
       showSnackBar(context, 'Complete fields');
     }
