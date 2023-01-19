@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:e_store/providers/providers.dart';
 import 'package:e_store/screens/main_screen.dart';
 import 'package:e_store/screens/profile_detail_screen.dart';
@@ -6,30 +8,60 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class OtpScreen extends StatelessWidget {
-  OtpScreen({Key? key, required this.verificationId}) : super(key: key);
+class OtpScreen extends StatefulWidget {
+  OtpScreen({Key? key, required this.verificationId, required this.phoneNumber})
+      : super(key: key);
 
+  final String phoneNumber;
+  final verificationId;
+
+  @override
+  State<OtpScreen> createState() => _OtpScreenState();
+}
+
+class _OtpScreenState extends State<OtpScreen> {
   final TextEditingController _fieldOne = TextEditingController();
+
   final TextEditingController _fieldTwo = TextEditingController();
+
   final TextEditingController _fieldThree = TextEditingController();
+
   final TextEditingController _fieldFour = TextEditingController();
+
   final TextEditingController _fieldFive = TextEditingController();
+
   final TextEditingController _fieldSix = TextEditingController();
 
-  final verificationId;
+  int timeLeft = 40;
+
+  @override
+  void initState() {
+    Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (timeLeft > 0) {
+        setState(() {
+          timeLeft--;
+        });
+      } else {
+        timer.cancel();
+      }
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     final isLoading =
         Provider.of<AuthProvider>(context, listen: true).isLoading;
 
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+
     return Scaffold(
       body: isLoading
-          ? Center(
+          ? const Center(
               child: CircularProgressIndicator(),
             )
           : Padding(
-              padding: EdgeInsets.all(16),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,7 +72,7 @@ class OtpScreen extends StatelessWidget {
                       fontSize: 18,
                     ),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 15,
                   ),
                   Row(
@@ -103,22 +135,28 @@ class OtpScreen extends StatelessWidget {
                   const SizedBox(
                     height: 15,
                   ),
-                  RichText(
-                    text: TextSpan(
-                      style: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      text: 'Didn\'t recieve code ? ',
-                      children: [
-                        TextSpan(
-                            text: 'Resend code',
-                            style: TextStyle(
-                              color: Theme.of(context).primaryColor,
+                  timeLeft != 0
+                      ? Text("00:${timeLeft.toString()}")
+                      : RichText(
+                          text: TextSpan(
+                            style: const TextStyle(
+                              color: Colors.black,
                             ),
-                            recognizer: TapGestureRecognizer()..onTap = () {}),
-                      ],
-                    ),
-                  ),
+                            text: 'Didn\'t recieve code ? ',
+                            children: [
+                              TextSpan(
+                                  text: 'Resend code',
+                                  style: TextStyle(
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      ap.signInWithPhone(
+                                          context, widget.phoneNumber);
+                                    }),
+                            ],
+                          ),
+                        )
                 ],
               ),
             ),
@@ -130,7 +168,7 @@ class OtpScreen extends StatelessWidget {
 
     ap.verifyOTP(
         context: context,
-        verificationId: verificationId,
+        verificationId: widget.verificationId,
         userOtp: smsCode,
         onSuccess: () async {
           ap.checkExistingUser().then((value) async {
@@ -147,7 +185,7 @@ class OtpScreen extends StatelessWidget {
 
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => ProfileDetailScreen(),
+                    builder: (context) => ProfileDetailScreen(newUser: true),
                   ),
                   (route) => false);
             }

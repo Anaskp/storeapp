@@ -1,7 +1,17 @@
+import 'package:e_store/screens/new_address_screen.dart';
+import 'package:e_store/utils/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/providers.dart';
 
 class ProfileDetailScreen extends StatelessWidget {
-  const ProfileDetailScreen({Key? key}) : super(key: key);
+  ProfileDetailScreen({Key? key, this.newUser = false}) : super(key: key);
+
+  final bool newUser;
+
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +24,7 @@ class ProfileDetailScreen extends StatelessWidget {
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.all(16),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -23,6 +33,7 @@ class ProfileDetailScreen extends StatelessWidget {
                 height: 10,
               ),
               TextField(
+                controller: _nameController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -37,6 +48,7 @@ class ProfileDetailScreen extends StatelessWidget {
                 height: 10,
               ),
               TextField(
+                controller: _emailController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -50,7 +62,9 @@ class ProfileDetailScreen extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    saveUser(context);
+                  },
                   child: const Text('Submit'),
                 ),
               )
@@ -59,5 +73,21 @@ class ProfileDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  saveUser(context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+    if (_nameController.text != '' && _emailController.text != '') {
+      ap
+          .saveUser(context, _nameController.text, _emailController.text)
+          .then((value) {
+        if (value == true) {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => NewAddressScreen()));
+        }
+      });
+    } else {
+      showSnackBar(context, 'Complete fields');
+    }
   }
 }

@@ -4,6 +4,8 @@ import 'package:e_store/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import '../model/models.dart';
+
 class AuthProvider with ChangeNotifier {
   final FirebaseAuth auth = FirebaseAuth.instance;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -26,7 +28,10 @@ class AuthProvider with ChangeNotifier {
         codeSent: (verId, forceResendingToken) {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => OtpScreen(verificationId: verId),
+              builder: (context) => OtpScreen(
+                verificationId: verId,
+                phoneNumber: phoneNumber,
+              ),
             ),
           );
         },
@@ -72,5 +77,17 @@ class AuthProvider with ChangeNotifier {
     } else {
       return false;
     }
+  }
+
+  Future<bool> saveUser(BuildContext context, String name, String email) async {
+    bool userAdded = false;
+    try {
+      UserModel user = UserModel(name: name, email: email);
+      firestore.collection('users').doc().set(user.toJson());
+      userAdded = true;
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return userAdded;
   }
 }
