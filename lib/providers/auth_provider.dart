@@ -3,6 +3,7 @@ import 'package:e_store/screens/otp_screen.dart';
 import 'package:e_store/utils/utils.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../model/models.dart';
 
@@ -12,20 +13,24 @@ class AuthProvider with ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
-  String? _userId;
-  String get userId => _userId!;
-  String? _userName;
-  String get name => _userName!;
-  String? _userEmail;
-  String get email => _userEmail!;
+  late String _userId;
+  String get userId => _userId;
+  late String _userName;
+  String get name => _userName;
+  late String _userEmail;
+  String get email => _userEmail;
   late Map<String, dynamic> _address;
   Map<String, dynamic> get address => _address;
+
+  AuthProvider() {
+    getUserData();
+  }
 
   void signInWithPhone(BuildContext context, String phoneNumber) async {
     showDialog(
         context: context,
         builder: (context) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         });
     try {
       await auth.verifyPhoneNumber(
@@ -124,7 +129,6 @@ class AuthProvider with ChangeNotifier {
       String pin, String city, String state,
       [bool newUser = true]) async {
     bool addressAdded = false;
-    print('infirst ${addressAdded}');
 
     try {
       AddressModel addressModel = AddressModel(
@@ -165,5 +169,38 @@ class AuthProvider with ChangeNotifier {
     }
 
     return addressAdded;
+  }
+
+  Future<void> getUserData() async {
+    _userId = auth.currentUser!.uid;
+
+    await firestore.collection('users').doc(_userId).get().then((value) {
+      _userName = value.data()!['name'];
+      _userEmail = value.data()!['email'];
+    });
+    firestore
+        .collection('users')
+        .doc(_userId)
+        .collection('address')
+        .doc('address')
+        .get()
+        .then((value) {
+      _address = value.data()!;
+    });
+    // notifyListeners();
+  }
+
+  Future<bool> signOut(context) async {
+    bool isLogOut = false;
+    final prefs = await SharedPreferences.getInstance();
+
+    try {
+      auth.signOut();
+      isLogOut = true;
+      await prefs.setBool('isLogged', false);
+    } on FirebaseAuthException catch (e) {
+      showSnackBar(context, e.message!);
+    }
+    return isLogOut;
   }
 }

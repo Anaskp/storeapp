@@ -2,6 +2,7 @@ import 'package:e_store/screens/screens.dart';
 import 'package:e_store/utils/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../providers/providers.dart';
 
@@ -114,11 +115,6 @@ class NewAddressScreen extends StatelessWidget {
         _cityController.text != '' &&
         _pinController.text.length == 6 &&
         _streetController.text != '') {
-      // showDialog(
-      //     context: context,
-      //     builder: (context) {
-      //       return Center(child: CircularProgressIndicator());
-      //     });
       if (newUser) {
         ap
             .addAddress(
@@ -129,8 +125,11 @@ class NewAddressScreen extends StatelessWidget {
           _cityController.text,
           _stateController.text,
         )
-            .then((value) {
+            .then((value) async {
           if (value == true) {
+            final prefs = await SharedPreferences.getInstance();
+
+            await prefs.setBool('isLogged', true);
             Navigator.of(context).pushAndRemoveUntil(
                 MaterialPageRoute(builder: (context) => MainScreen()),
                 (route) => false);

@@ -1,6 +1,9 @@
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/providers.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -43,8 +46,19 @@ class ProfileScreen extends StatelessWidget {
                 height: 50,
                 width: double.infinity,
                 child: ElevatedButton(
-                  child: Text('Log Out'),
-                  onPressed: () {},
+                  child: const Text('Log Out'),
+                  onPressed: () {
+                    final ap =
+                        Provider.of<AuthProvider>(context, listen: false);
+                    ap.signOut(context).then((value) {
+                      if (value == true) {
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => MobileLogin()),
+                            (route) => false);
+                      }
+                    });
+                  },
                 ),
               )
             ],

@@ -1,5 +1,8 @@
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/providers.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({Key? key}) : super(key: key);
@@ -9,6 +12,12 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  @override
+  void initState() {
+    getData();
+    super.initState();
+  }
+
   List _pages = [
     HomeScreen(),
     SearchScreen(),
@@ -53,5 +62,11 @@ class _MainScreenState extends State<MainScreen> {
         },
       ),
     );
+  }
+
+  getData() async {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+
+    await ap.getUserData();
   }
 }

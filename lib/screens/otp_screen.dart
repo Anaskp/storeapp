@@ -7,6 +7,7 @@ import 'package:e_store/utils/utils.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpScreen extends StatefulWidget {
   OtpScreen({Key? key, required this.verificationId, required this.phoneNumber})
@@ -163,18 +164,20 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
-  void verifyOtp(BuildContext context, String smsCode) {
+  void verifyOtp(BuildContext context, String smsCode) async {
     final ap = Provider.of<AuthProvider>(context, listen: false);
 
     ap.verifyOTP(
         context: context,
         verificationId: widget.verificationId,
         userOtp: smsCode,
-        onSuccess: () async {
+        onSuccess: () {
           ap.checkExistingUser().then((value) async {
             if (value == true) {
               //user exist
+              final prefs = await SharedPreferences.getInstance();
 
+              await prefs.setBool('isLogged', true);
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
                     builder: (context) => MainScreen(),

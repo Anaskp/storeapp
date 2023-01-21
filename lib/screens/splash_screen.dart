@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:e_store/providers/providers.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -17,11 +17,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(
       Duration(seconds: 3),
       () {
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(
-              builder: (context) => MobileLogin(),
-            ),
-            (route) => false);
+        isLogged();
       },
     );
 
@@ -35,5 +31,32 @@ class _SplashScreenState extends State<SplashScreen> {
         child: Text('Grocery store'),
       ),
     );
+  }
+
+  isLogged() async {
+    final prefs = await SharedPreferences.getInstance();
+    final bool? isLogged = prefs.getBool('isLogged');
+
+    if (isLogged != null) {
+      if (isLogged) {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => MainScreen(),
+            ),
+            (route) => false);
+      } else {
+        Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(
+              builder: (context) => MobileLogin(),
+            ),
+            (route) => false);
+      }
+    } else {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(
+            builder: (context) => MobileLogin(),
+          ),
+          (route) => false);
+    }
   }
 }
