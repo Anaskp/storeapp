@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../model/models.dart';
 import '../providers/providers.dart';
 
 class NewAddressScreen extends StatelessWidget {
@@ -19,6 +20,15 @@ class NewAddressScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (newUser == false) {
+      final ap = Provider.of<AuthProvider>(context, listen: false);
+      AddressModel address = AddressModel.fromJson(ap.address);
+      _houseController.text = address.house;
+      _cityController.text = address.city;
+      _pinController.text = address.pin;
+      _stateController.text = address.state;
+      _streetController.text = address.street;
+    }
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -147,6 +157,7 @@ class NewAddressScreen extends StatelessWidget {
                 false)
             .then((value) {
           if (value == true) {
+            Navigator.of(context).pop();
             Navigator.of(context).pop();
           }
         });

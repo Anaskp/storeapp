@@ -1,64 +1,45 @@
+import 'package:e_store/model/address_model.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/providers.dart';
 
 class AddressScreen extends StatelessWidget {
   const AddressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+    AddressModel address = AddressModel.fromJson(ap.address);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Addresses'),
+        title: const Text('Address'),
         centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(
           top: 16,
         ),
-        child: ListView.separated(
-          itemCount: 2,
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: Icon(Icons.location_on),
-              title: Text('Home'),
-              subtitle: Text(
-                'Home- akjfhjks, jkasdfhkasd, jasdfhkasd dfhkasd',
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
+        child: ListTile(
+          leading: Icon(Icons.location_on),
+          title: Text(address.house),
+          subtitle: Text(
+            '${address.street}\n${address.city} ${address.state} ${address.pin}',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+          ),
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => NewAddressScreen()));
+                },
+                icon: Icon(Icons.edit),
               ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.edit),
-                  ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(Icons.delete),
-                  ),
-                ],
-              ),
-            );
-          },
-          separatorBuilder: (context, index) {
-            return Divider(
-              thickness: 2,
-            );
-          },
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: SizedBox(
-          height: 50,
-          child: ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => NewAddressScreen(),
-              ));
-            },
-            child: const Text('Add new address'),
+            ],
           ),
         ),
       ),

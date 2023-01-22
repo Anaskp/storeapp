@@ -15,10 +15,9 @@ class AuthProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   late String _userId;
   String get userId => _userId;
-  late String _userName;
-  String get name => _userName;
-  late String _userEmail;
-  String get email => _userEmail;
+
+  late Map<String, dynamic> _userData;
+  Map<String, dynamic> get userData => _userData;
   late Map<String, dynamic> _address;
   Map<String, dynamic> get address => _address;
 
@@ -104,18 +103,16 @@ class AuthProvider with ChangeNotifier {
       if (newUser) {
         firestore.collection('users').doc(userId).set(user.toJson());
         userAdded = true;
-        _userName = name;
-        _userEmail = email;
+        _userData = user.toJson();
         notifyListeners();
       } else {
         firestore
             .collection('users')
-            .doc(userId)
+            .doc(_userId)
             .update(user.toJson())
             .then((value) {
           userAdded = true;
-          _userName = name;
-          _userEmail = email;
+          _userData = user.toJson();
           notifyListeners();
         });
       }
@@ -147,7 +144,7 @@ class AuthProvider with ChangeNotifier {
             .doc('address')
             .set(addressModel.toJson())
             .then((value) {
-          //_address = addressModel.toJson();
+          _address = addressModel.toJson();
           notifyListeners();
         });
       } else {
@@ -158,7 +155,7 @@ class AuthProvider with ChangeNotifier {
             .doc('address')
             .update(addressModel.toJson())
             .then((value) {
-          //  _address = addressModel.toJson();
+          _address = addressModel.toJson();
           notifyListeners();
         });
       }
@@ -175,8 +172,7 @@ class AuthProvider with ChangeNotifier {
     _userId = auth.currentUser!.uid;
 
     await firestore.collection('users').doc(_userId).get().then((value) {
-      _userName = value.data()!['name'];
-      _userEmail = value.data()!['email'];
+      _userData = value.data()!;
     });
     firestore
         .collection('users')

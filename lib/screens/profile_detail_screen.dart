@@ -1,3 +1,4 @@
+import 'package:e_store/model/models.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:e_store/utils/utils.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,13 @@ class ProfileDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (newUser == false) {
+      final ap = Provider.of<AuthProvider>(context, listen: false);
+      UserModel user = UserModel.fromJson(ap.userData);
+      _nameController.text = user.name;
+      _emailController.text = user.email;
+    }
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -81,7 +89,7 @@ class ProfileDetailScreen extends StatelessWidget {
       showDialog(
           context: context,
           builder: (context) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           });
       if (newUser) {
         ap
@@ -103,6 +111,7 @@ class ProfileDetailScreen extends StatelessWidget {
             .saveUser(
                 context, _nameController.text, _emailController.text, false)
             .then((value) {
+          Navigator.of(context).pop();
           Navigator.of(context).pop();
         });
       }
