@@ -32,7 +32,7 @@ class NewAddressScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Add new address'),
+        title: Text(newUser ? 'Add new address' : 'Update Address'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -108,7 +108,7 @@ class NewAddressScreen extends StatelessWidget {
                   onPressed: () {
                     addAddress(context);
                   },
-                  child: const Text('Add new address'),
+                  child: Text(newUser ? 'Add new address' : 'Update'),
                 ),
               ),
             ],

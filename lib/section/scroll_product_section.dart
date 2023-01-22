@@ -128,79 +128,111 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
                                 ),
                                 child: Padding(
                                   padding: const EdgeInsets.all(12),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Stack(
                                     children: [
-                                      Expanded(
-                                        child: Align(
-                                            alignment: Alignment.center,
-                                            child: Image.network(
-                                                documentSnapshot['url'])),
-                                      ),
-                                      Text(
-                                        documentSnapshot['name'],
-                                        maxLines: 2,
-                                      ),
-                                      Text(
-                                        '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
-                                        style: const TextStyle(
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
-                                          Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                                          Expanded(
+                                            child: Align(
+                                                alignment: Alignment.center,
+                                                child: Image.network(
+                                                    documentSnapshot['url'])),
+                                          ),
+                                          Text(
+                                            documentSnapshot['name'],
+                                            maxLines: 2,
+                                          ),
+                                          Text(
+                                            '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                            ),
+                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Text(
-                                                documentSnapshot[
-                                                    'originalPrice'],
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                  decoration: TextDecoration
-                                                      .lineThrough,
-                                                  color: Colors.grey[700],
-                                                ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    documentSnapshot[
+                                                        'originalPrice'],
+                                                    style: TextStyle(
+                                                      fontSize: 10,
+                                                      decoration: TextDecoration
+                                                          .lineThrough,
+                                                      color: Colors.grey[700],
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    documentSnapshot[
+                                                        'salePrice'],
+                                                  ),
+                                                ],
                                               ),
-                                              Text(
-                                                documentSnapshot['salePrice'],
+                                              DecoratedBox(
+                                                decoration: BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.grey[500]!,
+                                                      offset: Offset(4, 4),
+                                                      blurRadius: 20,
+                                                      spreadRadius: 1,
+                                                    ),
+                                                    const BoxShadow(
+                                                      color: Colors.white,
+                                                      offset: Offset(-4, -4),
+                                                      blurRadius: 20,
+                                                      spreadRadius: 1,
+                                                    ),
+                                                  ],
+                                                ),
+                                                child: IconButton(
+                                                  icon: const Icon(
+                                                    Icons.add,
+                                                    color: Colors.pink,
+                                                  ),
+                                                  onPressed: () async {
+                                                    final cp = Provider.of<
+                                                            CartProvider>(
+                                                        context,
+                                                        listen: false);
+                                                    cp.addToCart(context,
+                                                        documentSnapshot.id);
+
+                                                    print(cp.count);
+                                                  },
+                                                ),
                                               ),
                                             ],
                                           ),
-                                          DecoratedBox(
-                                            decoration: BoxDecoration(
-                                              color: Colors.white,
-                                              borderRadius:
-                                                  BorderRadius.circular(8),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey[500]!,
-                                                  offset: Offset(4, 4),
-                                                  blurRadius: 20,
-                                                  spreadRadius: 1,
-                                                ),
-                                                const BoxShadow(
-                                                  color: Colors.white,
-                                                  offset: Offset(-4, -4),
-                                                  blurRadius: 20,
-                                                  spreadRadius: 1,
-                                                ),
-                                              ],
-                                            ),
-                                            child: IconButton(
-                                              icon: const Icon(
-                                                Icons.add,
-                                                color: Colors.pink,
-                                              ),
-                                              onPressed: () {},
-                                            ),
-                                          ),
                                         ],
                                       ),
+                                      int.parse(documentSnapshot['offer']) > 0
+                                          ? Positioned(
+                                              top: 0,
+                                              right: 0,
+                                              child: CircleAvatar(
+                                                backgroundColor:
+                                                    Colors.green[200],
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Text(
+                                                    '${documentSnapshot['offer']}%',
+                                                    style: const TextStyle(
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                              ))
+                                          : const SizedBox.shrink(),
                                     ],
                                   ),
                                 ),

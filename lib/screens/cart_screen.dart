@@ -1,27 +1,35 @@
+import 'package:e_store/screens/new_address_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../model/models.dart';
+import '../providers/providers.dart';
+import '../widgets/widgets.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+    AddressModel address = AddressModel.fromJson(ap.address);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cart'),
+        title: const Text('Cart'),
         centerTitle: true,
       ),
       bottomNavigationBar: Container(
         height: 130,
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.only(
+          borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(25),
             topRight: Radius.circular(25),
           ),
           boxShadow: [
             BoxShadow(
               color: Colors.grey[400]!,
-              offset: Offset(0, -5),
+              offset: const Offset(0, -5),
               blurRadius: 20,
             ),
           ],
@@ -35,24 +43,27 @@ class CartScreen extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      'Home- akjfhjks, jkasdfhkasd, jasdfhkasd dfhkasd',
+                      '${address.house},${address.street},${address.city}, ${address.state}',
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   TextButton(
-                    onPressed: () {},
-                    child: Text('Change location'),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => NewAddressScreen()));
+                    },
+                    child: const Text('Change location'),
                   ),
                 ],
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('₹314'),
+                  const Text('₹314'),
                   ElevatedButton(
                     onPressed: () {},
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(
                         horizontal: 20,
                       ),
                       child: Text('Continue to Payment'),
@@ -70,13 +81,13 @@ class CartScreen extends StatelessWidget {
           child: Column(
             children: [
               ListView.builder(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 itemCount: 10,
                 itemBuilder: ((context, index) {
                   return ListTile(
-                    title: Text('Cucumber'),
-                    subtitle: Text('300g'),
+                    title: const Text('Cucumber'),
+                    subtitle: const Text('300g'),
                     leading: Image.asset(
                       'assets/images/veg.png',
                       width: 70,
@@ -90,32 +101,15 @@ class CartScreen extends StatelessWidget {
                             color: Theme.of(context).primaryColor,
                             borderRadius: BorderRadius.circular(10),
                           ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.remove,
-                                ),
-                              ),
-                              Text('1'),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.add,
-                                ),
-                              ),
-                            ],
-                          ),
+                          child: CounterWidget(),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text('₹35'),
+                            const Text('₹35'),
                             Text(
                               '₹40',
                               style: TextStyle(
