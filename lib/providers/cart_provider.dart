@@ -5,7 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 
 class CartProvider with ChangeNotifier {
-  late int _count;
+  int _count = 0;
   int get count => _count;
 
   late Map<String, dynamic> _cartItems;
@@ -20,12 +20,16 @@ class CartProvider with ChangeNotifier {
           .collection('users')
           .doc(_userId)
           .collection('cart')
-          .doc('cart')
+          .doc()
           .get();
 
       if (data.exists) {
-        _cartItems = data.data()!;
-        _count = _cartItems['cart'].length;
+        _count = firestore
+            .collection('users')
+            .doc(_userId)
+            .collection('cart')
+            .snapshots()
+            .length as int;
         notifyListeners();
         print('$_count in fetch');
       }
@@ -34,15 +38,22 @@ class CartProvider with ChangeNotifier {
     }
   }
 
-  addToCart(context, String docId) async {
-    if (_count > 0) {
+  addToCart(context, String productDoc, [Map<String, dynamic>? product]) async {
+    var data = await firestore
+        .collection('users')
+        .doc(_userId)
+        .collection('cart')
+        .doc(productDoc)
+        .get();
+    if (data.exists) {
       firestore
           .collection('users')
           .doc(_userId)
           .collection('cart')
-          .doc('cart')
-          .update({'cart.$docId': 2});
+          .doc(productDoc)
+          .update({'count': FieldValue.increment(1)});
 
+      _count++;
       await fetchCart(context);
       notifyListeners();
     } else {
@@ -50,13 +61,34 @@ class CartProvider with ChangeNotifier {
           .collection('users')
           .doc(_userId)
           .collection('cart')
-          .doc('cart')
-          .set({
-        'cart': {docId: 2}
-      });
+          .doc(productDoc)
+          .set(product!);
 
+      _count++;
       await fetchCart(context);
       notifyListeners();
+    }
+  }
+
+  removeCart(
+    BuildContext context,
+    String prodDoc,
+    int count,
+  ) {
+    if (count == 1) {
+      firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('cart')
+          .doc(prodDoc)
+          .delete();
+    } else {
+      firestore
+          .collection('users')
+          .doc(_userId)
+          .collection('cart')
+          .doc(prodDoc)
+          .update({'count': FieldValue.increment(-1)});
     }
   }
 }

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/model/cart_product_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -204,10 +205,32 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
                                                             CartProvider>(
                                                         context,
                                                         listen: false);
-                                                    cp.addToCart(context,
-                                                        documentSnapshot.id);
 
-                                                    print(cp.count);
+                                                    CartProductModel
+                                                        cartProductModel =
+                                                        CartProductModel(
+                                                      name: documentSnapshot[
+                                                          'name'],
+                                                      qty: documentSnapshot[
+                                                          'qty'],
+                                                      qtyMeasure:
+                                                          documentSnapshot[
+                                                              'qtyMeasure'],
+                                                      originalPrice:
+                                                          documentSnapshot[
+                                                              'originalPrice'],
+                                                      salePrice:
+                                                          documentSnapshot[
+                                                              'salePrice'],
+                                                      count: 1,
+                                                      image: documentSnapshot[
+                                                          'url'],
+                                                    );
+                                                    cp.addToCart(
+                                                      context,
+                                                      documentSnapshot.id,
+                                                      cartProductModel.toJson(),
+                                                    );
                                                   },
                                                 ),
                                               ),

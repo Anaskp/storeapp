@@ -23,7 +23,7 @@ class _MainScreenState extends State<MainScreen> {
   List _pages = [
     const HomeScreen(),
     const SearchScreen(),
-    const CartScreen(),
+    CartScreen(),
     const ProfileScreen(),
   ];
 
@@ -81,9 +81,8 @@ class _MainScreenState extends State<MainScreen> {
     final ap = Provider.of<AuthProvider>(context, listen: false);
     final cp = Provider.of<CartProvider>(context, listen: false);
     await cp.fetchCart(context);
-    setState(() {
-      _count = cp.count;
-    });
+
+    _count = cp.count;
     print(_count);
 
     await ap.getUserData();
