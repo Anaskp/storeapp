@@ -16,23 +16,15 @@ class CartProvider with ChangeNotifier {
 
   fetchCart(context) async {
     try {
-      var data = await firestore
+      QuerySnapshot _myDoc = await firestore
           .collection('users')
           .doc(_userId)
           .collection('cart')
-          .doc()
           .get();
+      List<DocumentSnapshot> myDocCount = _myDoc.docs;
 
-      if (data.exists) {
-        _count = firestore
-            .collection('users')
-            .doc(_userId)
-            .collection('cart')
-            .snapshots()
-            .length as int;
-        notifyListeners();
-        print('$_count in fetch');
-      }
+      _count = myDocCount.length;
+      notifyListeners();
     } catch (e) {
       showSnackBar(context, e.toString());
     }
@@ -53,7 +45,6 @@ class CartProvider with ChangeNotifier {
           .doc(productDoc)
           .update({'count': FieldValue.increment(1)});
 
-      _count++;
       await fetchCart(context);
       notifyListeners();
     } else {
@@ -74,7 +65,7 @@ class CartProvider with ChangeNotifier {
     BuildContext context,
     String prodDoc,
     int count,
-  ) {
+  ) async {
     if (count == 1) {
       firestore
           .collection('users')
@@ -82,6 +73,10 @@ class CartProvider with ChangeNotifier {
           .collection('cart')
           .doc(prodDoc)
           .delete();
+
+      _count--;
+      await fetchCart(context);
+      notifyListeners();
     } else {
       firestore
           .collection('users')
@@ -89,6 +84,9 @@ class CartProvider with ChangeNotifier {
           .collection('cart')
           .doc(prodDoc)
           .update({'count': FieldValue.increment(-1)});
+
+      await fetchCart(context);
+      notifyListeners();
     }
   }
 }

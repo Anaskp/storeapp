@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   int? _count;
   @override
   Widget build(BuildContext context) {
-    final cp = Provider.of<CartProvider>(context, listen: true);
+    final cp = Provider.of<CartProvider>(context);
 
     return Scaffold(
       body: _pages[_selectedIndex],
@@ -56,7 +56,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Badge(
                 elevation: 0,
                 badgeContent: Text(
-                  _count == null ? '0' : _count.toString(),
+                  cp.count.toString(),
                   style: TextStyle(
                     color: Colors.white,
                   ),
