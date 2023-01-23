@@ -41,6 +41,7 @@ dependencies:
   firebase_core: ^2.4.0
   shared_preferences: ^2.0.17
   badges: ^2.0.3
+  cached_network_image: ^3.2.3
   
 
 dev_dependencies:

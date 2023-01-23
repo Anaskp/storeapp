@@ -13,8 +13,12 @@ class AuthProvider with ChangeNotifier {
 
   bool _isLoading = false;
   bool get isLoading => _isLoading;
+
   late String _userId;
   String get userId => _userId;
+
+  late String _userName;
+  String get userName => _userName;
 
   late Map<String, dynamic> _userData;
   Map<String, dynamic> get userData => _userData;
@@ -97,6 +101,7 @@ class AuthProvider with ChangeNotifier {
   Future<bool> saveUser(BuildContext context, String name, String email,
       [bool newUser = true]) async {
     bool userAdded = false;
+    final prefs = await SharedPreferences.getInstance();
 
     try {
       UserModel user = UserModel(name: name, email: email);
@@ -104,6 +109,9 @@ class AuthProvider with ChangeNotifier {
         firestore.collection('users').doc(userId).set(user.toJson());
         userAdded = true;
         _userData = user.toJson();
+
+        prefs.setString('name', name);
+        _userName = name;
         notifyListeners();
       } else {
         firestore
@@ -112,7 +120,9 @@ class AuthProvider with ChangeNotifier {
             .update(user.toJson())
             .then((value) {
           userAdded = true;
+          prefs.setString('name', name);
           _userData = user.toJson();
+          _userName = name;
           notifyListeners();
         });
       }

@@ -44,6 +44,7 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
 
   @override
   Widget build(BuildContext context) {
+    final cp = Provider.of<CartProvider>(context, listen: false);
     return Container(
       height: 250,
       color: widget.color,
@@ -200,37 +201,10 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
                                                     Icons.add,
                                                     color: Colors.pink,
                                                   ),
-                                                  onPressed: () async {
-                                                    final cp = Provider.of<
-                                                            CartProvider>(
-                                                        context,
-                                                        listen: false);
-
-                                                    CartProductModel
-                                                        cartProductModel =
-                                                        CartProductModel(
-                                                      name: documentSnapshot[
-                                                          'name'],
-                                                      qty: documentSnapshot[
-                                                          'qty'],
-                                                      qtyMeasure:
-                                                          documentSnapshot[
-                                                              'qtyMeasure'],
-                                                      originalPrice:
-                                                          documentSnapshot[
-                                                              'originalPrice'],
-                                                      salePrice:
-                                                          documentSnapshot[
-                                                              'salePrice'],
-                                                      count: 1,
-                                                      image: documentSnapshot[
-                                                          'url'],
-                                                    );
-                                                    cp.addToCart(
-                                                      context,
-                                                      documentSnapshot.id,
-                                                      cartProductModel.toJson(),
-                                                    );
+                                                  onPressed: () {
+                                                    cp.addProduct(
+                                                        documentSnapshot,
+                                                        context);
                                                   },
                                                 ),
                                               ),
@@ -280,4 +254,26 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
       ),
     );
   }
+
+  // addProduct(DocumentSnapshot documentSnapshot) async {
+  //   final cp = Provider.of<CartProvider>(context, listen: false);
+
+  //   CartProductModel cartProductModel = CartProductModel(
+  //     name: documentSnapshot['name'],
+  //     qty: documentSnapshot['qty'],
+  //     qtyMeasure: documentSnapshot['qtyMeasure'],
+  //     originalPrice: documentSnapshot['originalPrice'],
+  //     salePrice: documentSnapshot['salePrice'],
+  //     count: 1,
+  //     image: documentSnapshot['url'],
+  //   );
+  //   cp.addToCart(
+  //     context,
+  //     documentSnapshot.id,
+  //     int.parse(documentSnapshot['originalPrice']),
+  //     int.parse(documentSnapshot['salePrice']),
+  //     cartProductModel.toJson(),
+  //   );
+
+  // }
 }

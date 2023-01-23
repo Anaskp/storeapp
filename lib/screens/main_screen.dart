@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:badges/badges.dart';
 import 'package:e_store/model/models.dart';
 import 'package:e_store/screens/screens.dart';
@@ -28,10 +30,10 @@ class _MainScreenState extends State<MainScreen> {
   ];
 
   var _selectedIndex = 0;
-  int? _count;
+
   @override
   Widget build(BuildContext context) {
-    final cp = Provider.of<CartProvider>(context);
+    final cp = Provider.of<CartProvider>(context, listen: false);
 
     return Scaffold(
       body: _pages[_selectedIndex],
@@ -81,10 +83,7 @@ class _MainScreenState extends State<MainScreen> {
     final ap = Provider.of<AuthProvider>(context, listen: false);
     final cp = Provider.of<CartProvider>(context, listen: false);
     await cp.fetchCart(context);
-
-    _count = cp.count;
-    print(_count);
-
     await ap.getUserData();
+    setState(() {});
   }
 }

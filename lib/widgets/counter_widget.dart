@@ -4,11 +4,18 @@ import 'package:provider/provider.dart';
 import '../providers/providers.dart';
 
 class CounterWidget extends StatelessWidget {
-  CounterWidget({Key? key, required this.count, required this.prodDoc})
-      : super(key: key);
+  CounterWidget({
+    Key? key,
+    required this.count,
+    required this.prodDoc,
+    required this.originalPrice,
+    required this.salePrice,
+  }) : super(key: key);
 
   int count;
   String prodDoc;
+  int originalPrice;
+  int salePrice;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +25,8 @@ class CounterWidget extends StatelessWidget {
       children: [
         IconButton(
           onPressed: () {
-            cp.removeCart(context, prodDoc, count);
+            cp.removeCart(context, prodDoc, count, originalPrice, salePrice);
+            // cp.reducePrice(originalPrice, salePrice);
           },
           icon: const Icon(
             Icons.remove,
@@ -26,8 +34,9 @@ class CounterWidget extends StatelessWidget {
         ),
         Text(count.toString()),
         IconButton(
-          onPressed: () {
-            cp.addToCart(context, prodDoc);
+          onPressed: () async {
+            cp.addToCart(prodDoc, originalPrice, salePrice);
+            // cp.addPrice(originalPrice, salePrice);
           },
           icon: const Icon(
             Icons.add,

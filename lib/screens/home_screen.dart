@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../model/models.dart';
+import '../providers/providers.dart';
 import '../section/sections.dart';
-import '../widgets/widgets.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+    UserModel user = UserModel.fromJson(ap.userData);
     return SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -18,10 +22,15 @@ class HomeScreen extends StatelessWidget {
               height: 10,
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Text(
+                'Welcome ${user.name}',
+                style: TextStyle(
+                  fontStyle: FontStyle.italic,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              child: SearchWidget(),
             ),
             const SizedBox(
               height: 10,
