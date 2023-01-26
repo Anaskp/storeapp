@@ -12,6 +12,7 @@ class ProductProvider with ChangeNotifier {
   String _qty = '';
   String _qtyMeasure = '';
   String _category = '';
+  String _productUid = '';
 
   String get name => _name;
   String get url => _url;
@@ -22,6 +23,7 @@ class ProductProvider with ChangeNotifier {
   String get qty => _qty;
   String get qtyMeasure => _qtyMeasure;
   String get category => _category;
+  String get productUid => _productUid;
 
   Future<bool> showProduct(String uid, context) async {
     showDialog(
@@ -45,6 +47,7 @@ class ProductProvider with ChangeNotifier {
         _qty = value.data()!['qty'];
         _qtyMeasure = value.data()!['qtyMeasure'];
         _category = value.data()!['categories'][0];
+        _productUid = uid;
         notifyListeners();
       });
     } catch (e) {

@@ -87,6 +87,7 @@ class SearchScreen extends StatelessWidget {
                                 isThreeLine: true,
                                 leading: CachedNetworkImage(
                                   imageUrl: documentSnapshot['url'],
+                                  width: 70,
                                 ),
                                 title: Text(
                                   documentSnapshot['name'],
@@ -121,9 +122,6 @@ class SearchScreen extends StatelessWidget {
                                       color: Colors.pink,
                                     ),
                                     onPressed: () {
-                                      var list = cp.checkProductCart(
-                                          documentSnapshot.id);
-                                      print(list);
                                       //cp.addProduct(documentSnapshot, context);
                                     },
                                   ),

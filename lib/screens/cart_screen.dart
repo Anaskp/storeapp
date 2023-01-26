@@ -1,7 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:e_store/screens/new_address_screen.dart';
+import 'package:e_store/screens/screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../model/models.dart';
@@ -45,73 +47,125 @@ class CartScreen extends StatelessWidget {
                   child: Text('Something got error'),
                 );
               } else if (snapshot.data!.docs.isEmpty) {
-                return const Center(
-                  child: Text('No Products'),
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.shopping_cart,
+                        size: 80,
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Your cart is Empty',
+                        style: TextStyle(fontSize: 18),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                builder: (context) => MainScreen(),
+                              ),
+                              (route) => false);
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 5,
+                          ),
+                          child: Text('Continue Shopping'),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               } else if (snapshot.hasData) {
                 return ListView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data!.docs.length,
                   itemBuilder: ((context, index) {
                     DocumentSnapshot documentSnapshot =
                         snapshot.data!.docs[index];
 
-                    return Card(
-                      child: ListTile(
-                        title: Text(documentSnapshot['name']),
-                        subtitle: Text(
-                            '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}'),
-                        leading: CachedNetworkImage(
-                          imageUrl: documentSnapshot['image'],
-                          width: 70,
-                        ),
-                        //  Image.network(
-                        //   documentSnapshot['image'],
-                        //   width: 70,
-                        // ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              height: 40,
-                              decoration: BoxDecoration(
-                                color: Theme.of(context).primaryColor,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: CounterWidget(
+                    return Slidable(
+                      startActionPane: ActionPane(
+                        motion: ScrollMotion(),
+                        children: [
+                          SlidableAction(
+                            icon: Icons.delete,
+                            backgroundColor: Colors.red,
+                            onPressed: (context) {
+                              cp.slideRemove(
+                                documentSnapshot.id,
+                                int.parse(documentSnapshot['originalPrice']),
+                                int.parse(documentSnapshot['salePrice']),
+                                documentSnapshot['count'],
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                      child: Card(
+                        child: ListTile(
+                          contentPadding: EdgeInsets.zero,
+                          title: Text(
+                            documentSnapshot['name'],
+                          ),
+                          subtitle: Text(
+                              '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}'),
+                          leading: CachedNetworkImage(
+                            imageUrl: documentSnapshot['image'],
+                            width: 70,
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CounterWidget(
                                 count: documentSnapshot['count'],
                                 prodDoc: documentSnapshot.id,
-                                originalPrice: int.parse(
-                                    documentSnapshot['originalPrice']),
-                                salePrice:
-                                    int.parse(documentSnapshot['salePrice']),
+                                originalPrice:
+                                    documentSnapshot['originalPrice'],
+                                salePrice: documentSnapshot['salePrice'],
                               ),
-                            ),
-                            const SizedBox(
-                              width: 15,
-                            ),
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(((int.parse(
-                                            documentSnapshot['salePrice'])) *
-                                        documentSnapshot['count'])
-                                    .toString()),
-                                Text(
-                                  ((int.parse(documentSnapshot[
-                                              'originalPrice'])) *
-                                          documentSnapshot['count'])
-                                      .toString(),
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.grey[700],
-                                    decoration: TextDecoration.lineThrough,
-                                  ),
+                              const SizedBox(
+                                width: 15,
+                              ),
+                              SizedBox(
+                                width: 50,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      ((int.parse(documentSnapshot[
+                                                  'salePrice'])) *
+                                              documentSnapshot['count'])
+                                          .toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    Text(
+                                      ((int.parse(documentSnapshot[
+                                                  'originalPrice'])) *
+                                              documentSnapshot['count'])
+                                          .toString(),
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.grey[700],
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ],
-                            )
-                          ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -177,7 +231,7 @@ class CartScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '₹ ${cp.totalPrice.toString()}',
+                                'Price: ₹ ${cp.totalPrice.toString()}',
                                 style: TextStyle(
                                   fontSize: 10,
                                   decoration: TextDecoration.lineThrough,
@@ -185,7 +239,7 @@ class CartScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '₹ ${cp.totalSalePrice.toString()}',
+                                'Sale Price: ₹ ${cp.totalSalePrice.toString()}',
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ],

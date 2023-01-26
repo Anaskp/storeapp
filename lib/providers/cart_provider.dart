@@ -15,6 +15,9 @@ class CartProvider with ChangeNotifier {
   int _totalSalePrice = 0;
   int get totalSalePrice => _totalSalePrice;
 
+  Map _cartItems = {};
+  Map get cartItems => _cartItems;
+
   final String _userId = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -29,11 +32,12 @@ class CartProvider with ChangeNotifier {
       List productList = [];
       for (var element in myDocCount) {
         productList.add(element.data());
+        _cartItems[element.id] = element['count'];
       }
 
       for (var i in productList) {
-        _totalPrice += int.parse(i['originalPrice']);
-        _totalSalePrice += int.parse(i['salePrice']);
+        _totalPrice += int.parse(i['originalPrice']) * (i['count'] as int);
+        _totalSalePrice += int.parse(i['salePrice']) * (i['count'] as int);
         notifyListeners();
       }
 
@@ -60,6 +64,7 @@ class CartProvider with ChangeNotifier {
           .doc(productDoc)
           .update({'count': FieldValue.increment(1)});
 
+      _cartItems.update(productDoc, (value) => _cartItems[productDoc] + 1);
       addPrice(originalPrice, salePrice);
       notifyListeners();
     } else {
@@ -70,6 +75,7 @@ class CartProvider with ChangeNotifier {
           .doc(productDoc)
           .set(product!);
 
+      _cartItems[productDoc] = 1;
       _count++;
       addPrice(originalPrice, salePrice);
       notifyListeners();
@@ -104,11 +110,12 @@ class CartProvider with ChangeNotifier {
                         .collection('cart')
                         .doc(prodDoc)
                         .delete();
+                    _cartItems.remove(prodDoc);
                     Navigator.of(context).pop();
                     reducePrice(originalPrice, salePrice);
 
                     _count--;
-
+                    _cartItems.remove(prodDoc);
                     notifyListeners();
                   },
                   child: Text(
@@ -128,13 +135,16 @@ class CartProvider with ChangeNotifier {
           .collection('cart')
           .doc(prodDoc)
           .update({'count': FieldValue.increment(-1)});
+
       reducePrice(originalPrice, salePrice);
+      _cartItems.update(prodDoc, (value) => _cartItems[prodDoc] - 1);
+      notifyListeners();
     }
   }
 
   addPrice(int originalPrice, int salePrice) {
     _totalPrice += originalPrice;
-    //print("$totalSalePrice ${salePrice.toString()}");
+    // print("$totalSalePrice ${salePrice.toString()}");
     _totalSalePrice += salePrice;
     notifyListeners();
   }
@@ -164,42 +174,17 @@ class CartProvider with ChangeNotifier {
     );
   }
 
-  Future<List> checkProductCart(String productDoc) async {
-    List returnList = [];
-    var data = await firestore
+  slideRemove(prodDoc, int originalPrice, int salePrice, int prodCount) async {
+    _totalPrice -= originalPrice * prodCount;
+    _totalSalePrice -= salePrice * prodCount;
+    _count--;
+    await firestore
         .collection('users')
         .doc(_userId)
         .collection('cart')
-        .doc(productDoc)
-        .get();
-
-    // if (data.exists) {
-    //   returnList.add(data.exists);
-    //   firestore
-    //       .collection('users')
-    //       .doc(_userId)
-    //       .collection('cart')
-    //       .doc(productDoc)
-    //       .get()
-    //       .then((value) {
-    //     var prodCount = value.data()!['count'];
-    //     returnList.add(prodCount);
-    //     return returnList;
-    //   });
-    // }
-
-    returnList.add(data.exists);
-    firestore
-        .collection('users')
-        .doc(_userId)
-        .collection('cart')
-        .doc(productDoc)
-        .get()
-        .then((value) {
-      var prodCount = value.data()!['count'];
-      returnList.add(prodCount);
-    });
-
-    return returnList;
+        .doc(prodDoc)
+        .delete();
+    _cartItems.remove(prodDoc);
+    notifyListeners();
   }
 }

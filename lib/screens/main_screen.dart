@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:badges/badges.dart';
-import 'package:e_store/model/models.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -33,7 +32,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cp = Provider.of<CartProvider>(context, listen: false);
+    final cp = Provider.of<CartProvider>(context);
 
     return Scaffold(
       body: _pages[_selectedIndex],

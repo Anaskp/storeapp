@@ -1,16 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/providers/providers.dart';
+import 'package:e_store/widgets/counter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../section/sections.dart';
 
 class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({
-    super.key,
-  });
+  ProductDetailScreen({super.key, required this.documentSnapshot});
+
+  DocumentSnapshot documentSnapshot;
 
   @override
   Widget build(BuildContext context) {
+    final cp = Provider.of<CartProvider>(context);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -23,19 +27,19 @@ class ProductDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Image.network(
-                      context.watch<ProductProvider>().url,
+                    CachedNetworkImage(
+                      imageUrl: documentSnapshot['url'],
                       height: MediaQuery.of(context).size.height / 2,
                     ),
                     Text(
-                      context.watch<ProductProvider>().name,
+                      documentSnapshot['name'],
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.w400,
                       ),
                     ),
                     Text(
-                      '${context.watch<ProductProvider>().qty} ${context.watch<ProductProvider>().qtyMeasure}',
+                      '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     Row(
@@ -43,12 +47,12 @@ class ProductDetailScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Text(context.watch<ProductProvider>().salePrice),
+                            Text(documentSnapshot['salePrice']),
                             const SizedBox(
                               width: 10,
                             ),
                             Text(
-                              context.watch<ProductProvider>().originalPrice,
+                              documentSnapshot['originalPrice'],
                               style: TextStyle(
                                 fontSize: 10,
                                 decoration: TextDecoration.lineThrough,
@@ -67,7 +71,7 @@ class ProductDetailScreen extends StatelessWidget {
                                 padding: const EdgeInsets.symmetric(
                                     vertical: 2, horizontal: 5),
                                 child: Text(
-                                  '${context.watch<ProductProvider>().offer}% off',
+                                  '${documentSnapshot['offer']}% off',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 10,
@@ -77,22 +81,33 @@ class ProductDetailScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        DecoratedBox(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: Colors.pink,
-                          ),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(
-                                vertical: 3, horizontal: 22),
-                            child: Text(
-                              'Add',
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
+                        InkWell(
+                          onTap: () => cp.addProduct(documentSnapshot, context),
+                          child: cp.cartItems.containsKey(documentSnapshot.id)
+                              ? CounterWidget(
+                                  count: cp.cartItems[documentSnapshot.id],
+                                  prodDoc: documentSnapshot.id,
+                                  originalPrice:
+                                      documentSnapshot['originalPrice'],
+                                  salePrice: documentSnapshot['salePrice'],
+                                )
+                              : DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.pink,
+                                  ),
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 3, horizontal: 22),
+                                    child: Text(
+                                      'Add',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ),
+                                ),
                         ),
                       ],
                     ),
@@ -113,7 +128,7 @@ class ProductDetailScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 12),
                       ),
                       children: [
-                        Text(context.watch<ProductProvider>().desc),
+                        Text(documentSnapshot['desc']),
                       ],
                     ),
                   ],
@@ -121,7 +136,7 @@ class ProductDetailScreen extends StatelessWidget {
               ),
               ScrollProductSection(
                 color: Colors.green[50]!,
-                name: context.watch<ProductProvider>().category,
+                name: documentSnapshot['categories'][0],
                 title: 'Similar products',
               ),
             ],

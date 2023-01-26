@@ -17,7 +17,7 @@ class AuthProvider with ChangeNotifier {
   late String _userId;
   String get userId => _userId;
 
-  late String _userName;
+  String _userName = '';
   String get userName => _userName;
 
   late Map<String, dynamic> _userData;
@@ -101,7 +101,6 @@ class AuthProvider with ChangeNotifier {
   Future<bool> saveUser(BuildContext context, String name, String email,
       [bool newUser = true]) async {
     bool userAdded = false;
-    final prefs = await SharedPreferences.getInstance();
 
     try {
       UserModel user = UserModel(name: name, email: email);
@@ -110,7 +109,6 @@ class AuthProvider with ChangeNotifier {
         userAdded = true;
         _userData = user.toJson();
 
-        prefs.setString('name', name);
         _userName = name;
         notifyListeners();
       } else {
@@ -120,7 +118,7 @@ class AuthProvider with ChangeNotifier {
             .update(user.toJson())
             .then((value) {
           userAdded = true;
-          prefs.setString('name', name);
+
           _userData = user.toJson();
           _userName = name;
           notifyListeners();
@@ -178,12 +176,14 @@ class AuthProvider with ChangeNotifier {
     return addressAdded;
   }
 
-  Future<void> getUserData() async {
+  getUserData() async {
     _userId = auth.currentUser!.uid;
 
     await firestore.collection('users').doc(_userId).get().then((value) {
       _userData = value.data()!;
     });
+    _userName = _userData['name'];
+    notifyListeners();
     firestore
         .collection('users')
         .doc(_userId)
@@ -193,7 +193,6 @@ class AuthProvider with ChangeNotifier {
         .then((value) {
       _address = value.data()!;
     });
-    // notifyListeners();
   }
 
   Future<bool> signOut(context) async {

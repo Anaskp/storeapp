@@ -14,35 +14,42 @@ class CounterWidget extends StatelessWidget {
 
   int count;
   String prodDoc;
-  int originalPrice;
-  int salePrice;
+  String originalPrice;
+  String salePrice;
 
   @override
   Widget build(BuildContext context) {
     final cp = Provider.of<CartProvider>(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          onPressed: () {
-            cp.removeCart(context, prodDoc, count, originalPrice, salePrice);
-            // cp.reducePrice(originalPrice, salePrice);
-          },
-          icon: const Icon(
-            Icons.remove,
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        color: Theme.of(context).primaryColor,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () {
+              cp.removeCart(context, prodDoc, count, int.parse(originalPrice),
+                  int.parse(salePrice));
+            },
+            icon: const Icon(
+              Icons.remove,
+            ),
           ),
-        ),
-        Text(count.toString()),
-        IconButton(
-          onPressed: () async {
-            cp.addToCart(prodDoc, originalPrice, salePrice);
-            // cp.addPrice(originalPrice, salePrice);
-          },
-          icon: const Icon(
-            Icons.add,
+          Text(count.toString()),
+          IconButton(
+            onPressed: () async {
+              cp.addToCart(
+                  prodDoc, int.parse(originalPrice), int.parse(salePrice));
+            },
+            icon: const Icon(
+              Icons.add,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

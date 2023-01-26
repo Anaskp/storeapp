@@ -87,14 +87,11 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                 snapshot.data!.docs[index];
 
                             return InkWell(
-                              onTap: () async {
-                                await context
-                                    .read<ProductProvider>()
-                                    .showProduct(documentSnapshot.id, context);
-
+                              onTap: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => ProductDetailScreen(),
+                                    builder: (context) => ProductDetailScreen(
+                                        documentSnapshot: documentSnapshot),
                                   ),
                                 );
                               },

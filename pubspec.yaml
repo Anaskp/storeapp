@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.0.17
   badges: ^2.0.3
   cached_network_image: ^3.2.3
+  flutter_slidable: ^2.0.0
   
 
 dev_dependencies:

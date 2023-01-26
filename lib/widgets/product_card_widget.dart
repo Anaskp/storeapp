@@ -1,21 +1,26 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/providers/providers.dart';
+import 'package:e_store/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../screens/screens.dart';
 
 class ProductCard extends StatelessWidget {
-  const ProductCard({
-    Key? key,
-  }) : super(key: key);
+  ProductCard({Key? key, required this.documentSnapshot}) : super(key: key);
+
+  DocumentSnapshot documentSnapshot;
 
   @override
   Widget build(BuildContext context) {
+    final cp = Provider.of<CartProvider>(context);
     return InkWell(
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ProductDetailScreen(),
+            builder: (context) =>
+                ProductDetailScreen(documentSnapshot: documentSnapshot),
           ),
         );
       },
@@ -27,72 +32,79 @@ class ProductCard extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+          child: Stack(
             children: [
-              Expanded(
-                child: Align(
-                    alignment: Alignment.center,
-                    child: Image.network(context.watch<ProductProvider>().url)),
-              ),
-              Text(
-                context.watch<ProductProvider>().name,
-                maxLines: 2,
-              ),
-              const Text(
-                '250ml',
-                style: TextStyle(
-                  fontSize: 11,
-                ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        context.watch<ProductProvider>().originalPrice,
-                        style: TextStyle(
-                          fontSize: 10,
-                          decoration: TextDecoration.lineThrough,
-                          color: Colors.grey[700],
-                        ),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: CachedNetworkImage(
+                        imageUrl: documentSnapshot['url'],
                       ),
-                      Text(
-                        context.watch<ProductProvider>().salePrice,
+                    ),
+                  ),
+                  Text(
+                    documentSnapshot['name'],
+                    maxLines: 2,
+                  ),
+                  Text(
+                    '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
+                    style: const TextStyle(
+                      fontSize: 11,
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            documentSnapshot['originalPrice'],
+                            style: TextStyle(
+                              fontSize: 10,
+                              decoration: TextDecoration.lineThrough,
+                              color: Colors.grey[700],
+                            ),
+                          ),
+                          Text(
+                            documentSnapshot['salePrice'],
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(8),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey[500]!,
-                          offset: Offset(4, 4),
-                          blurRadius: 20,
-                          spreadRadius: 1,
-                        ),
-                        const BoxShadow(
-                          color: Colors.white,
-                          offset: Offset(-4, -4),
-                          blurRadius: 20,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                    child: IconButton(
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.pink,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
+                  if (cp.cartItems.containsKey(documentSnapshot.id))
+                    CounterWidget(
+                      count: cp.cartItems[documentSnapshot.id],
+                      prodDoc: documentSnapshot.id,
+                      originalPrice: documentSnapshot['originalPrice'],
+                      salePrice: documentSnapshot['salePrice'],
+                    )
+                  else
+                    Align(
+                        alignment: Alignment.center,
+                        child: AddButton(
+                            cp: cp, documentSnapshot: documentSnapshot)),
                 ],
               ),
+              int.parse(documentSnapshot['offer']) > 0
+                  ? Positioned(
+                      top: 0,
+                      right: 0,
+                      child: CircleAvatar(
+                        backgroundColor: Colors.green[200],
+                        child: Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            '${documentSnapshot['offer']}%',
+                            style: const TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ))
+                  : const SizedBox.shrink(),
             ],
           ),
         ),

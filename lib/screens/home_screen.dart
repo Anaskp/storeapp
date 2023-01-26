@@ -10,8 +10,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ap = Provider.of<AuthProvider>(context, listen: false);
-    UserModel user = UserModel.fromJson(ap.userData);
+    final ap = Provider.of<AuthProvider>(context);
+
     return SafeArea(
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -24,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                'Welcome ${user.name}',
+                'Welcome ${ap.userName}',
                 style: TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 18,

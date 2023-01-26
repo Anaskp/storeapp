@@ -38,13 +38,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
   isLogged() async {
     final prefs = await SharedPreferences.getInstance();
-    //final ap = Provider.of<AuthProvider>(context, listen: false);
     final bool? isLogged = prefs.getBool('isLogged');
 
     if (isLogged != null) {
       if (isLogged) {
-        // final String? _name = prefs.getString('name');
-        // ap.userName = _name ?? '';
         Navigator.of(context).pushAndRemoveUntil(
             MaterialPageRoute(
               builder: (context) => MainScreen(),
