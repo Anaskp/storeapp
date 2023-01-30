@@ -50,7 +50,7 @@ class CartScreen extends StatelessWidget {
                 return Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
+                    children: const [
                       Icon(
                         Icons.shopping_cart,
                         size: 80,
@@ -61,24 +61,6 @@ class CartScreen extends StatelessWidget {
                       Text(
                         'Your cart is Empty',
                         style: TextStyle(fontSize: 18),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushAndRemoveUntil(
-                              MaterialPageRoute(
-                                builder: (context) => MainScreen(),
-                              ),
-                              (route) => false);
-                        },
-                        child: const Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 5,
-                          ),
-                          child: Text('Continue Shopping'),
-                        ),
                       ),
                     ],
                   ),
@@ -94,7 +76,7 @@ class CartScreen extends StatelessWidget {
 
                     return Slidable(
                       startActionPane: ActionPane(
-                        motion: ScrollMotion(),
+                        motion: const ScrollMotion(),
                         children: [
                           SlidableAction(
                             icon: Icons.delete,
@@ -120,6 +102,14 @@ class CartScreen extends StatelessWidget {
                               '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}'),
                           leading: CachedNetworkImage(
                             imageUrl: documentSnapshot['image'],
+                            placeholder: (context, url) {
+                              return Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              );
+                            },
                             width: 70,
                           ),
                           trailing: Row(
@@ -137,32 +127,37 @@ class CartScreen extends StatelessWidget {
                               ),
                               SizedBox(
                                 width: 50,
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      ((int.parse(documentSnapshot[
-                                                  'salePrice'])) *
-                                              documentSnapshot['count'])
-                                          .toString(),
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
+                                child: documentSnapshot['originalPrice'] !=
+                                        documentSnapshot['salePrice']
+                                    ? Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            '₹ ${((int.parse(documentSnapshot['salePrice'])) * documentSnapshot['count']).toString()}',
+                                            overflow: TextOverflow.ellipsis,
+                                            style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          Text(
+                                            '₹ ${((int.parse(documentSnapshot['originalPrice'])) * documentSnapshot['count']).toString()}',
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              color: Colors.grey[700],
+                                              decoration:
+                                                  TextDecoration.lineThrough,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        '₹ ${((int.parse(documentSnapshot['salePrice'])) * documentSnapshot['count']).toString()}',
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
-                                    ),
-                                    Text(
-                                      ((int.parse(documentSnapshot[
-                                                  'originalPrice'])) *
-                                              documentSnapshot['count'])
-                                          .toString(),
-                                      style: TextStyle(
-                                        fontSize: 10,
-                                        color: Colors.grey[700],
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
-                                  ],
-                                ),
                               )
                             ],
                           ),
@@ -227,23 +222,28 @@ class CartScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Price: ₹ ${cp.totalPrice.toString()}',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  decoration: TextDecoration.lineThrough,
-                                  color: Colors.grey[700],
+                          child: cp.totalPrice != cp.totalSalePrice
+                              ? Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Price: ₹ ${cp.totalPrice.toString()}',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        decoration: TextDecoration.lineThrough,
+                                        color: Colors.grey[700],
+                                      ),
+                                    ),
+                                    Text(
+                                      'Sale Price: ₹ ${cp.totalSalePrice.toString()}',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                )
+                              : Text(
+                                  'Price: ₹ ${cp.totalSalePrice.toString()}',
+                                  overflow: TextOverflow.ellipsis,
                                 ),
-                              ),
-                              Text(
-                                'Sale Price: ₹ ${cp.totalSalePrice.toString()}',
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
-                          ),
                         ),
                         ElevatedButton(
                           onPressed: () {},
@@ -260,7 +260,7 @@ class CartScreen extends StatelessWidget {
                 ),
               ),
             )
-          : SizedBox.shrink(),
+          : const SizedBox.shrink(),
     );
   }
 }

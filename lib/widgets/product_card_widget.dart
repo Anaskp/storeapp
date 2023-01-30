@@ -41,6 +41,14 @@ class ProductCard extends StatelessWidget {
                     child: Align(
                       alignment: Alignment.center,
                       child: CachedNetworkImage(
+                        placeholder: (context, url) {
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          );
+                        },
                         imageUrl: documentSnapshot['url'],
                       ),
                     ),
@@ -61,14 +69,17 @@ class ProductCard extends StatelessWidget {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            documentSnapshot['originalPrice'],
-                            style: TextStyle(
-                              fontSize: 10,
-                              decoration: TextDecoration.lineThrough,
-                              color: Colors.grey[700],
-                            ),
-                          ),
+                          documentSnapshot['originalPrice'] !=
+                                  documentSnapshot['salePrice']
+                              ? Text(
+                                  documentSnapshot['originalPrice'],
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.grey[700],
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                           Text(
                             documentSnapshot['salePrice'],
                           ),
@@ -86,8 +97,7 @@ class ProductCard extends StatelessWidget {
                   else
                     Align(
                         alignment: Alignment.center,
-                        child: AddButton(
-                            cp: cp, documentSnapshot: documentSnapshot)),
+                        child: AddButton(documentSnapshot: documentSnapshot)),
                 ],
               ),
               int.parse(documentSnapshot['offer']) > 0

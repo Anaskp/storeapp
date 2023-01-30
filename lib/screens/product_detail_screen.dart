@@ -45,41 +45,47 @@ class ProductDetailScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          children: [
-                            Text(documentSnapshot['salePrice']),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            Text(
-                              documentSnapshot['originalPrice'],
-                              style: TextStyle(
-                                fontSize: 10,
-                                decoration: TextDecoration.lineThrough,
-                                color: Colors.grey[700],
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 10,
-                            ),
-                            DecoratedBox(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.purple,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 2, horizontal: 5),
-                                child: Text(
-                                  '${documentSnapshot['offer']}% off',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 10,
+                        documentSnapshot['originalPrice'] !=
+                                documentSnapshot['salePrice']
+                            ? Row(
+                                children: [
+                                  Text(documentSnapshot['salePrice']),
+                                  const SizedBox(
+                                    width: 10,
                                   ),
-                                ),
-                              ),
-                            ),
-                          ],
+                                  Text(
+                                    documentSnapshot['originalPrice'],
+                                    style: TextStyle(
+                                      fontSize: 10,
+                                      decoration: TextDecoration.lineThrough,
+                                      color: Colors.grey[700],
+                                    ),
+                                  ),
+                                  const SizedBox(
+                                    width: 10,
+                                  ),
+                                  DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      color: Colors.purple,
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 2, horizontal: 5),
+                                      child: Text(
+                                        '${documentSnapshot['offer']}% off',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 10,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              )
+                            : Text(documentSnapshot['salePrice']),
+                        const SizedBox(
+                          width: 10,
                         ),
                         InkWell(
                           onTap: () => cp.addProduct(documentSnapshot, context),

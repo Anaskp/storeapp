@@ -1,20 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/providers.dart';
 
 class AddButton extends StatelessWidget {
   const AddButton({
     Key? key,
-    required this.cp,
     required this.documentSnapshot,
   }) : super(key: key);
 
-  final CartProvider cp;
   final DocumentSnapshot<Object?> documentSnapshot;
 
   @override
   Widget build(BuildContext context) {
+    final cp = Provider.of<CartProvider>(context);
     return DecoratedBox(
       decoration: BoxDecoration(
         color: Colors.white,

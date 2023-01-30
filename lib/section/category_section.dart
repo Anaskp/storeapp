@@ -88,6 +88,14 @@ class CategorySection extends StatelessWidget {
                               Expanded(
                                 child: CachedNetworkImage(
                                   imageUrl: documentSnapshot['url'],
+                                  placeholder: (context, url) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ),
                             ],

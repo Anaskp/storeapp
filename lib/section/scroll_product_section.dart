@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/screens/see_all_product.dart';
 
 import 'package:e_store/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 
-class ScrollProductSection extends StatefulWidget {
+class ScrollProductSection extends StatelessWidget {
   ScrollProductSection({
     Key? key,
     this.name = '',
@@ -15,35 +16,14 @@ class ScrollProductSection extends StatefulWidget {
   final String title;
   final Color color;
 
-  @override
-  State<ScrollProductSection> createState() => _ScrollProductSectionState();
-}
-
-class _ScrollProductSectionState extends State<ScrollProductSection> {
-  late Stream<QuerySnapshot<Map<String, dynamic>>> products;
-
-  @override
-  void initState() {
-    if (widget.name != '') {
-      products = FirebaseFirestore.instance
-          .collection('products')
-          .where('categories', arrayContains: widget.name)
-          .snapshots();
-    } else {
-      products = FirebaseFirestore.instance
-          .collection('products')
-          .orderBy('created', descending: true)
-          .snapshots();
-    }
-
-    super.initState();
-  }
+  CollectionReference firestore =
+      FirebaseFirestore.instance.collection('products');
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 280,
-      color: widget.color,
+      height: 300,
+      color: color,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -51,13 +31,32 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
             height: 10,
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 8),
-            child: Text(
-              widget.title,
-              style: const TextStyle(
-                fontWeight: FontWeight.w400,
-                fontSize: 18,
-              ),
+            padding: const EdgeInsets.only(left: 16, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 18,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => SeeAllProduct(name: name),
+                    ));
+                  },
+                  child: const Text(
+                    'See all',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w400,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
           const SizedBox(
@@ -67,7 +66,11 @@ class _ScrollProductSectionState extends State<ScrollProductSection> {
             height: 210,
             width: double.infinity,
             child: StreamBuilder(
-                stream: products,
+                stream: name == ''
+                    ? firestore.orderBy('created', descending: true).snapshots()
+                    : firestore
+                        .where('categories', arrayContains: name)
+                        .snapshots(),
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {

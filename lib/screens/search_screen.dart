@@ -1,22 +1,32 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/screens/product_detail_screen.dart';
 import 'package:e_store/widgets/widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/cart_provider.dart';
 
-class SearchScreen extends StatelessWidget {
+class SearchScreen extends StatefulWidget {
   const SearchScreen({Key? key}) : super(key: key);
 
   @override
+  State<SearchScreen> createState() => _SearchScreenState();
+}
+
+class _SearchScreenState extends State<SearchScreen> {
+  String search = '';
+
+  CollectionReference firestore =
+      FirebaseFirestore.instance.collection('products');
+
+  @override
   Widget build(BuildContext context) {
-    final cp = Provider.of<CartProvider>(context, listen: false);
+    final cp = Provider.of<CartProvider>(context);
+
     return SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.all(8),
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: [
               Container(
@@ -30,9 +40,14 @@ class SearchScreen extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 12),
                   child: Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: TextField(
-                          decoration: InputDecoration(
+                          onChanged: (value) {
+                            setState(() {
+                              search = value;
+                            });
+                          },
+                          decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: 'Search for a product',
                             hintStyle: TextStyle(
@@ -41,7 +56,7 @@ class SearchScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.search,
                       ),
                     ],
@@ -51,103 +66,110 @@ class SearchScreen extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              StreamBuilder(
-                stream: FirebaseFirestore.instance
-                    .collection('products')
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.connectionState ==
-                          ConnectionState.active ||
-                      snapshot.connectionState == ConnectionState.done) {
-                    if (snapshot.hasError) {
-                      return const Center(
-                        child: Text('Something got error'),
-                      );
-                    } else if (snapshot.data!.docs.isEmpty) {
-                      return const Center(
-                        child: Text('No products'),
-                      );
-                    } else if (snapshot.hasData) {
-                      return ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          DocumentSnapshot documentSnapshot =
-                              snapshot.data!.docs[index];
-                          // List prodCart =
-                          //     cp.checkProductCart(documentSnapshot.id) as List;
-                          return Card(
-                            child: ListTile(
-                                isThreeLine: true,
-                                leading: CachedNetworkImage(
-                                  imageUrl: documentSnapshot['url'],
-                                  width: 70,
-                                ),
-                                title: Text(
-                                  documentSnapshot['name'],
-                                ),
-                                subtitle: Text(
-                                  '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}\n₹ ${documentSnapshot['salePrice']}',
-                                ),
-                                trailing:
-                                    //prodCart[0] == false ?
-                                    DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey[500]!,
-                                        offset: Offset(4, 4),
-                                        blurRadius: 20,
-                                        spreadRadius: 1,
-                                      ),
-                                      const BoxShadow(
-                                        color: Colors.white,
-                                        offset: Offset(-4, -4),
-                                        blurRadius: 20,
-                                        spreadRadius: 1,
-                                      ),
-                                    ],
-                                  ),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.add,
-                                      color: Colors.pink,
-                                    ),
-                                    onPressed: () {
-                                      //cp.addProduct(documentSnapshot, context);
-                                    },
-                                  ),
-                                )
-                                // : CounterWidget(
-                                //     count: prodCart[1],
-                                //     prodDoc: documentSnapshot.id,
-                                //     originalPrice:
-                                //         documentSnapshot['originalPrice'],
-                                //     salePrice: documentSnapshot['salePrice'],
-                                //   ),
-                                ),
+              Expanded(
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: firestore.snapshots(),
+                    builder: (BuildContext context,
+                        AsyncSnapshot<QuerySnapshot> snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (snapshot.connectionState ==
+                              ConnectionState.active ||
+                          snapshot.connectionState == ConnectionState.done) {
+                        if (snapshot.hasError) {
+                          return const Center(
+                            child: Text('Something got error'),
                           );
-                        },
-                      );
-                    } else {
-                      return const Center(
-                        child: Text('No products'),
-                      );
-                    }
-                  } else {
-                    return Center(
-                      child: Text(snapshot.connectionState.toString()),
-                    );
-                  }
-                },
+                        } else if (snapshot.data!.docs.isEmpty) {
+                          return const Center(
+                            child: Text('No products'),
+                          );
+                        } else if (snapshot.hasData) {
+                          return ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              DocumentSnapshot documentSnapshot =
+                                  snapshot.data!.docs[index];
+
+                              if ((documentSnapshot['name'])
+                                  .toString()
+                                  .toLowerCase()
+                                  .startsWith(search.toLowerCase())) {
+                                return InkWell(
+                                  onTap: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => ProductDetailScreen(
+                                          documentSnapshot: documentSnapshot),
+                                    ));
+                                  },
+                                  child: Card(
+                                    child: ListTile(
+                                      isThreeLine: true,
+                                      leading: CachedNetworkImage(
+                                        imageUrl: documentSnapshot['url'],
+                                        placeholder: (context, url) {
+                                          return Container(
+                                            decoration: BoxDecoration(
+                                              color: Colors.grey[200],
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                            ),
+                                          );
+                                        },
+                                        width: 70,
+                                      ),
+                                      title: Text(
+                                        documentSnapshot['name'],
+                                      ),
+                                      subtitle: Text(
+                                        '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}\n₹ ${documentSnapshot['salePrice']}',
+                                      ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          cp.cartItems.containsKey(
+                                                  documentSnapshot.id)
+                                              ? CounterWidget(
+                                                  count: cp.cartItems[
+                                                      documentSnapshot.id],
+                                                  prodDoc: documentSnapshot.id,
+                                                  originalPrice:
+                                                      documentSnapshot[
+                                                          'originalPrice'],
+                                                  salePrice: documentSnapshot[
+                                                      'salePrice'])
+                                              : AddButton(
+                                                  documentSnapshot:
+                                                      documentSnapshot),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }
+                              return const SizedBox.shrink();
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: Text('No products'),
+                          );
+                        }
+                      } else {
+                        return Center(
+                          child: Text(snapshot.connectionState.toString()),
+                        );
+                      }
+                    },
+                  ),
+                ),
               ),
             ],
           ),
