@@ -50,6 +50,7 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 
@@ -81,66 +82,62 @@ class _CarouselSectionState extends State<CarouselSection> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        if (_dataLength != 0)
-          FutureBuilder(
-            future: getImageSliderFromDb(),
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              return snapshot.data == null
-                  ? Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(
-                            Theme.of(context).primaryColor),
-                      ),
-                    )
-                  : CarouselSlider.builder(
-                      itemCount: snapshot.data.length,
-                      itemBuilder: (BuildContext context, int index, int) {
-                        DocumentSnapshot sliderImage = snapshot.data[index];
-                        Map data = sliderImage.data() as Map;
+    return Container(
+      color: Colors.grey[300],
+      child: Column(
+        children: [
+          if (_dataLength != 0)
+            FutureBuilder(
+              future: getImageSliderFromDb(),
+              builder: (BuildContext context, AsyncSnapshot snapshot) {
+                return snapshot.data == null
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Theme.of(context).primaryColor),
+                        ),
+                      )
+                    : CarouselSlider.builder(
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (BuildContext context, int index, int) {
+                          DocumentSnapshot sliderImage = snapshot.data[index];
+                          Map data = sliderImage.data() as Map;
 
-                        return Container(
-                          margin: const EdgeInsets.all(5.0),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                color: Colors.green[100],
-                              ),
-                              child: Stack(
-                                children: <Widget>[
-                                  CachedNetworkImage(
-                                      placeholder: (context, url) {
-                                        return Container(
-                                          decoration: BoxDecoration(
-                                            color: Colors.grey[200],
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                        );
-                                      },
-                                      imageUrl: data['url'],
-                                      fit: BoxFit.contain,
-                                      width: 1000.0),
-                                  Positioned(
-                                    bottom: 10,
-                                    left: 10,
-                                    child: Text(data['name']),
-                                  ),
-                                ],
-                              )),
-                        );
-                      },
-                      options: CarouselOptions(
-                        autoPlay: true,
-                        aspectRatio: 2.0,
-                        enlargeCenterPage: true,
-                        enlargeStrategy: CenterPageEnlargeStrategy.height,
-                      ),
-                    );
-            },
-          ),
-      ],
+                          return InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    SeeAllProduct(name: data['name']),
+                              ));
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.all(5.0),
+                              child: CachedNetworkImage(
+                                  placeholder: (context, url) {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    );
+                                  },
+                                  imageUrl: data['url'],
+                                  fit: BoxFit.contain,
+                                  width: 1000.0),
+                            ),
+                          );
+                        },
+                        options: CarouselOptions(
+                          autoPlay: true,
+                          aspectRatio: 2.0,
+                          enlargeCenterPage: true,
+                          enlargeStrategy: CenterPageEnlargeStrategy.height,
+                        ),
+                      );
+              },
+            ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,4 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:e_store/screens/new_address_screen.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -181,7 +180,7 @@ class CartScreen extends StatelessWidget {
       ),
       bottomNavigationBar: cp.count > 0
           ? Container(
-              height: 130,
+              height: 140,
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: const BorderRadius.only(
@@ -238,6 +237,10 @@ class CartScreen extends StatelessWidget {
                                       'Sale Price: ₹ ${cp.totalSalePrice.toString()}',
                                       overflow: TextOverflow.ellipsis,
                                     ),
+                                    Text(
+                                      'Offer: ${cp.offer.toString()}%',
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
                                   ],
                                 )
                               : Text(
@@ -246,12 +249,16 @@ class CartScreen extends StatelessWidget {
                                 ),
                         ),
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => CheckoutScreen(),
+                            ));
+                          },
                           child: const Padding(
                             padding: EdgeInsets.symmetric(
                               horizontal: 5,
                             ),
-                            child: Text('Continue to Payment'),
+                            child: Text('Checkout'),
                           ),
                         ),
                       ],

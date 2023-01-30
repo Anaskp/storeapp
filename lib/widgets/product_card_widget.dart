@@ -72,7 +72,7 @@ class ProductCard extends StatelessWidget {
                           documentSnapshot['originalPrice'] !=
                                   documentSnapshot['salePrice']
                               ? Text(
-                                  documentSnapshot['originalPrice'],
+                                  '₹ ${documentSnapshot['originalPrice']}',
                                   style: TextStyle(
                                     fontSize: 10,
                                     decoration: TextDecoration.lineThrough,
@@ -81,7 +81,7 @@ class ProductCard extends StatelessWidget {
                                 )
                               : const SizedBox.shrink(),
                           Text(
-                            documentSnapshot['salePrice'],
+                            '₹ ${documentSnapshot['salePrice']}',
                           ),
                         ],
                       ),

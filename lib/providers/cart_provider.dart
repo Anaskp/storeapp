@@ -18,8 +18,16 @@ class CartProvider with ChangeNotifier {
   Map _cartItems = {};
   Map get cartItems => _cartItems;
 
+  int _offer = 0;
+  int get offer => _offer;
+
   final String _userId = FirebaseAuth.instance.currentUser!.uid;
   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  getOffer() {
+    _offer = (((totalPrice - totalSalePrice) * 100) / totalPrice).floor();
+    notifyListeners();
+  }
 
   fetchCart(context) async {
     try {
@@ -38,6 +46,7 @@ class CartProvider with ChangeNotifier {
       for (var i in productList) {
         _totalPrice += int.parse(i['originalPrice']) * (i['count'] as int);
         _totalSalePrice += int.parse(i['salePrice']) * (i['count'] as int);
+        getOffer();
         notifyListeners();
       }
 
@@ -77,6 +86,7 @@ class CartProvider with ChangeNotifier {
 
       _cartItems[productDoc] = 1;
       _count++;
+      getOffer();
       addPrice(originalPrice, salePrice);
       notifyListeners();
     }
@@ -115,6 +125,7 @@ class CartProvider with ChangeNotifier {
                     reducePrice(originalPrice, salePrice);
 
                     _count--;
+                    getOffer();
                     _cartItems.remove(prodDoc);
                     notifyListeners();
                   },
@@ -137,6 +148,7 @@ class CartProvider with ChangeNotifier {
           .update({'count': FieldValue.increment(-1)});
 
       reducePrice(originalPrice, salePrice);
+      getOffer();
       _cartItems.update(prodDoc, (value) => _cartItems[prodDoc] - 1);
       notifyListeners();
     }
@@ -144,15 +156,15 @@ class CartProvider with ChangeNotifier {
 
   addPrice(int originalPrice, int salePrice) {
     _totalPrice += originalPrice;
-    // print("$totalSalePrice ${salePrice.toString()}");
     _totalSalePrice += salePrice;
+    getOffer();
     notifyListeners();
   }
 
   reducePrice(int originalPrice, int salePrice) {
     _totalPrice -= originalPrice;
     _totalSalePrice -= salePrice;
-    //print("$totalSalePrice ${salePrice.toString()}");
+    getOffer();
     notifyListeners();
   }
 
@@ -185,6 +197,7 @@ class CartProvider with ChangeNotifier {
         .doc(prodDoc)
         .delete();
     _cartItems.remove(prodDoc);
+    getOffer();
     notifyListeners();
   }
 }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../model/models.dart';
 import '../providers/providers.dart';
 import '../section/sections.dart';
 
@@ -36,9 +34,6 @@ class HomeScreen extends StatelessWidget {
               height: 10,
             ),
             CarouselSection(),
-            const SizedBox(
-              height: 10,
-            ),
             ScrollProductSection(
               color: Colors.green[50]!,
               name: 'Fruits',

@@ -22,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   List _pages = [
-    const HomeScreen(),
+    HomeScreen(),
     const SearchScreen(),
     CartScreen(),
     const ProfileScreen(),
