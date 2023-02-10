@@ -266,6 +266,7 @@ class CheckoutScreen extends StatelessWidget {
       'status': 'Ordered',
       'address': ap.address,
       'mobile': user.phoneNumber,
+      'userId': user.uid,
     });
 
     await firestore
