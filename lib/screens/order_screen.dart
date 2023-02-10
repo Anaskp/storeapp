@@ -1,3 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/screens/screens.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class OrderScreen extends StatelessWidget {
@@ -5,89 +8,155 @@ class OrderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var uid = FirebaseAuth.instance.currentUser!.uid;
+    var orders = FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .collection('orders')
+        .snapshots();
     return Scaffold(
       appBar: AppBar(
         title: Text('Orders'),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: ListView.separated(
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Tomato,Mushroom,cucumber, Chocolate, Carrot',
-                            maxLines: 2,
-                          ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: StreamBuilder(
+            stream: orders,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.connectionState == ConnectionState.active ||
+                  snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasError) {
+                  return const Center(
+                    child: Text('Something got error'),
+                  );
+                } else if (snapshot.data!.docs.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(
+                          Icons.receipt_long,
+                          size: 80,
                         ),
                         SizedBox(
-                          width: 10,
+                          height: 10,
                         ),
-                        Text('₹291'),
+                        Text(
+                          'No Orders',
+                          style: TextStyle(fontSize: 18),
+                        ),
                       ],
                     ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            'Order #546876542swtfg4ds5\n18/10/22 08:45pm',
-                          ),
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Container(
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(5),
-                              color: Colors.grey[300],
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(5),
-                              child: Text(
-                                'Cancelled',
-                                style: TextStyle(
-                                  fontSize: 12,
+                  );
+                } else if (snapshot.hasData) {
+                  return ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      DocumentSnapshot documentSnapshot =
+                          snapshot.data!.docs[index];
+                      String title = '';
+                      for (var i = 0;
+                          i < documentSnapshot['products'].length;
+                          i++) {
+                        title = title +
+                            documentSnapshot['products'][i]['name'] +
+                            ' ';
+                      }
+
+                      return InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => OrderDdetailScreen(
+                                documentSnapshot: documentSnapshot),
+                          ));
+                        },
+                        child: Card(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        title,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                        '₹ ${documentSnapshot['price'].toString()}'),
+                                  ],
                                 ),
-                              ),
-                            )),
-                      ],
-                    ),
-                    ElevatedButton(
-                      onPressed: () {},
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.shopping_bag),
-                          SizedBox(
-                            width: 10,
+                                SizedBox(
+                                  height: 10,
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        'Order #${documentSnapshot.id}\n${documentSnapshot['date']} ${documentSnapshot['time']}',
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          color: documentSnapshot['status'] ==
+                                                  'ordered'
+                                              ? Colors.green[300]
+                                              : Colors.grey[300],
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5),
+                                          child: Text(
+                                            documentSnapshot['status'],
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                        )),
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
-                          Text('Reorder'),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                thickness: 3,
-                height: 0,
-              );
-            },
-            itemCount: 10),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (context, index) {
+                      return Divider(
+                        thickness: 3,
+                        height: 0,
+                      );
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: Text('No orders'),
+                  );
+                }
+              } else {
+                return Center(
+                  child: Text(snapshot.connectionState.toString()),
+                );
+              }
+            }),
       ),
     );
   }

@@ -36,13 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   carousel_slider: ^4.1.1
   provider: ^6.0.5
-  cloud_firestore: ^4.3.0
-  firebase_auth: ^4.2.3
+  cloud_firestore: ^4.3.1
+  firebase_auth: 
   firebase_core: ^2.4.0
   shared_preferences: ^2.0.17
   badges: ^2.0.3
   cached_network_image: ^3.2.3
   flutter_slidable: ^2.0.0
+  intl: ^0.18.0
   
 
 dev_dependencies:

@@ -36,15 +36,15 @@
 //             ))
 //         .toList();
 
-//           return CarouselSlider(
-//             options: CarouselOptions(
-//               autoPlay: true,
-//               aspectRatio: 2.0,
-//               enlargeCenterPage: true,
-//               enlargeStrategy: CenterPageEnlargeStrategy.height,
-//             ),
-//             items: imageSliders,
-//           );
+//     return CarouselSlider(
+//       options: CarouselOptions(
+//         autoPlay: true,
+//         aspectRatio: 2.0,
+//         enlargeCenterPage: true,
+//         enlargeStrategy: CenterPageEnlargeStrategy.height,
+//       ),
+//       items: imageSliders,
+//     );
 //   }
 // }
 
@@ -113,23 +113,23 @@ class _CarouselSectionState extends State<CarouselSection> {
                             child: Container(
                               margin: const EdgeInsets.all(5.0),
                               child: CachedNetworkImage(
-                                  placeholder: (context, url) {
-                                    return Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.grey[200],
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                    );
-                                  },
-                                  imageUrl: data['url'],
-                                  fit: BoxFit.contain,
-                                  width: 1000.0),
+                                placeholder: (context, url) {
+                                  return Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                  );
+                                },
+                                imageUrl: data['url'],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         },
                         options: CarouselOptions(
                           autoPlay: true,
-                          aspectRatio: 2.0,
+                          aspectRatio: 2.5,
                           enlargeCenterPage: true,
                           enlargeStrategy: CenterPageEnlargeStrategy.height,
                         ),

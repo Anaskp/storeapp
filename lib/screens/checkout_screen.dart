@@ -1,16 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:e_store/screens/main_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/providers.dart';
 
 class CheckoutScreen extends StatelessWidget {
-  const CheckoutScreen({super.key});
+  CheckoutScreen({super.key});
 
+  int total = 0;
   @override
   Widget build(BuildContext context) {
     final cp = Provider.of<CartProvider>(context, listen: false);
+
     bool needDiscount = cp.totalSalePrice > 500;
-    int total = cp.totalPrice;
+    total = cp.totalSalePrice;
     if (needDiscount == false) {
       total = total + 100;
     }
@@ -32,11 +38,14 @@ class CheckoutScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            Divider(
+              thickness: 3,
+            ),
             SizedBox(
               height: 10,
             ),
             Text(
-              'Payment',
+              'Payment method',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
@@ -136,7 +145,7 @@ class CheckoutScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Packing price',
+                          'Packing',
                         ),
                         Text(needDiscount ? '₹ 0' : '₹ 50'),
                       ],
@@ -177,7 +186,9 @@ class CheckoutScreen extends StatelessWidget {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  checkOut(context);
+                },
                 child: Text('Checkout'),
               ),
             ),
@@ -185,5 +196,77 @@ class CheckoutScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  checkOut(context) async {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    );
+
+    final ap = Provider.of<AuthProvider>(context, listen: false);
+    final cp = Provider.of<CartProvider>(context, listen: false);
+    var user = FirebaseAuth.instance.currentUser;
+    var firestore = FirebaseFirestore.instance;
+
+    QuerySnapshot _myDoc = await firestore
+        .collection('users')
+        .doc(user!.uid)
+        .collection('cart')
+        .get();
+    List<DocumentSnapshot> myDocCount = _myDoc.docs;
+    List productList = [];
+    for (var element in myDocCount) {
+      productList.add(element.data());
+    }
+
+    var now = DateTime.now();
+    var date = DateFormat('dd-MM-yyyy').format(now);
+    var time = DateFormat.jm().format(now);
+
+    DocumentReference docRef = await firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('orders')
+        .add({
+      'products': productList,
+      'date': date,
+      'time': time,
+      'price': total,
+      'status': 'Ordered'
+    });
+
+    await firestore.collection('orders').doc(docRef.id).set({
+      'products': productList,
+      'date': date,
+      'time': time,
+      'price': total,
+      'status': 'Ordered',
+      'address': ap.address,
+      'mobile': user.phoneNumber,
+    });
+
+    await firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('cart')
+        .get()
+        .then((snapshot) {
+      for (DocumentSnapshot ds in snapshot.docs) {
+        ds.reference.delete();
+      }
+    });
+
+    cp.checkout();
+
+    Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+          builder: (context) => MainScreen(),
+        ),
+        (route) => false);
   }
 }

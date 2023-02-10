@@ -15,3 +15,4 @@ export 'splash_screen.dart';
 export 'new_address_screen.dart';
 export 'see_all_product.dart';
 export 'checkout_screen.dart';
+export 'order_detail_screen.dart';

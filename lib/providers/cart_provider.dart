@@ -46,8 +46,8 @@ class CartProvider with ChangeNotifier {
       for (var i in productList) {
         _totalPrice += int.parse(i['originalPrice']) * (i['count'] as int);
         _totalSalePrice += int.parse(i['salePrice']) * (i['count'] as int);
-        getOffer();
         notifyListeners();
+        getOffer();
       }
 
       _count = myDocCount.length;
@@ -74,8 +74,9 @@ class CartProvider with ChangeNotifier {
           .update({'count': FieldValue.increment(1)});
 
       _cartItems.update(productDoc, (value) => _cartItems[productDoc] + 1);
-      addPrice(originalPrice, salePrice);
       notifyListeners();
+      addPrice(originalPrice, salePrice);
+      getOffer();
     } else {
       firestore
           .collection('users')
@@ -86,9 +87,10 @@ class CartProvider with ChangeNotifier {
 
       _cartItems[productDoc] = 1;
       _count++;
-      getOffer();
-      addPrice(originalPrice, salePrice);
+
       notifyListeners();
+      addPrice(originalPrice, salePrice);
+      getOffer();
     }
   }
 
@@ -122,12 +124,12 @@ class CartProvider with ChangeNotifier {
                         .delete();
                     _cartItems.remove(prodDoc);
                     Navigator.of(context).pop();
-                    reducePrice(originalPrice, salePrice);
 
                     _count--;
-                    getOffer();
                     _cartItems.remove(prodDoc);
                     notifyListeners();
+                    reducePrice(originalPrice, salePrice);
+                    getOffer();
                   },
                   child: Text(
                     'Remove',
@@ -147,25 +149,27 @@ class CartProvider with ChangeNotifier {
           .doc(prodDoc)
           .update({'count': FieldValue.increment(-1)});
 
-      reducePrice(originalPrice, salePrice);
-      getOffer();
       _cartItems.update(prodDoc, (value) => _cartItems[prodDoc] - 1);
       notifyListeners();
+      reducePrice(originalPrice, salePrice);
+      getOffer();
     }
   }
 
   addPrice(int originalPrice, int salePrice) {
     _totalPrice += originalPrice;
     _totalSalePrice += salePrice;
-    getOffer();
+
     notifyListeners();
+    getOffer();
   }
 
   reducePrice(int originalPrice, int salePrice) {
     _totalPrice -= originalPrice;
     _totalSalePrice -= salePrice;
-    getOffer();
+
     notifyListeners();
+    getOffer();
   }
 
   addProduct(DocumentSnapshot documentSnapshot, BuildContext context) async {
@@ -190,6 +194,7 @@ class CartProvider with ChangeNotifier {
     _totalPrice -= originalPrice * prodCount;
     _totalSalePrice -= salePrice * prodCount;
     _count--;
+    notifyListeners();
     await firestore
         .collection('users')
         .doc(_userId)
@@ -197,7 +202,17 @@ class CartProvider with ChangeNotifier {
         .doc(prodDoc)
         .delete();
     _cartItems.remove(prodDoc);
+
+    notifyListeners();
     getOffer();
+  }
+
+  checkout() {
+    _count = 0;
+    _totalPrice = 0;
+    _totalSalePrice = 0;
+    _offer = 0;
+    _cartItems = {};
     notifyListeners();
   }
 }
