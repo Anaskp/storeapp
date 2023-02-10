@@ -55,7 +55,6 @@ class _MainScreenState extends State<MainScreen> {
           BottomNavigationBarItem(
             label: 'Cart',
             icon: Badge(
-                elevation: 0,
                 badgeContent: Text(
                   cp.count.toString(),
                   style: TextStyle(

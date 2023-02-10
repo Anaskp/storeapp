@@ -10,15 +10,23 @@ import '../providers/providers.dart';
 class CheckoutScreen extends StatelessWidget {
   CheckoutScreen({super.key});
 
-  int total = 0;
+  int subTotal = 0;
+  int totalSalePrice = 0;
+  int deliveryCharge = 0;
+  int packingCharge = 0;
   @override
   Widget build(BuildContext context) {
     final cp = Provider.of<CartProvider>(context, listen: false);
 
-    bool needDiscount = cp.totalSalePrice > 500;
-    total = cp.totalSalePrice;
+    totalSalePrice = cp.totalSalePrice;
+    bool needDiscount = totalSalePrice > 500;
+
     if (needDiscount == false) {
-      total = total + 100;
+      deliveryCharge = 30;
+      packingCharge = 20;
+      subTotal += totalSalePrice + deliveryCharge + packingCharge;
+    } else {
+      subTotal = totalSalePrice;
     }
 
     return Scaffold(
@@ -135,7 +143,7 @@ class CheckoutScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Delivery'),
-                        Text(needDiscount ? '₹ 0' : '₹ 50'),
+                        Text(deliveryCharge.toString()),
                       ],
                     ),
                     SizedBox(
@@ -147,7 +155,7 @@ class CheckoutScreen extends StatelessWidget {
                         Text(
                           'Packing',
                         ),
-                        Text(needDiscount ? '₹ 0' : '₹ 50'),
+                        Text(packingCharge.toString()),
                       ],
                     ),
                     SizedBox(
@@ -157,14 +165,14 @@ class CheckoutScreen extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Total',
+                          'Sub total',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
                         ),
                         Text(
-                          total.toString(),
+                          subTotal.toString(),
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
@@ -236,7 +244,12 @@ class CheckoutScreen extends StatelessWidget {
       'products': productList,
       'date': date,
       'time': time,
-      'price': total,
+      'totalSalePrice': cp.totalSalePrice,
+      'totalPrice': cp.totalPrice,
+      'subTotal': subTotal,
+      'offer': cp.offer,
+      'delivery': deliveryCharge,
+      'packing': packingCharge,
       'status': 'Ordered'
     });
 
@@ -244,7 +257,12 @@ class CheckoutScreen extends StatelessWidget {
       'products': productList,
       'date': date,
       'time': time,
-      'price': total,
+      'totalSalePrice': cp.totalSalePrice,
+      'totalPrice': cp.totalPrice,
+      'subTotal': subTotal,
+      'offer': cp.offer,
+      'delivery': deliveryCharge,
+      'packing': packingCharge,
       'status': 'Ordered',
       'address': ap.address,
       'mobile': user.phoneNumber,

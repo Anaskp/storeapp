@@ -13,6 +13,7 @@ class OrderScreen extends StatelessWidget {
         .collection('users')
         .doc(uid)
         .collection('orders')
+        .orderBy('date', descending: true)
         .snapshots();
     return Scaffold(
       appBar: AppBar(
@@ -97,7 +98,7 @@ class OrderScreen extends StatelessWidget {
                                       width: 10,
                                     ),
                                     Text(
-                                        '₹ ${documentSnapshot['price'].toString()}'),
+                                        '₹ ${documentSnapshot['totalSalePrice'].toString()}'),
                                   ],
                                 ),
                                 SizedBox(
