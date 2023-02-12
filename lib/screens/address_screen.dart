@@ -22,7 +22,7 @@ class AddressScreen extends StatelessWidget {
           top: 16,
         ),
         child: ListTile(
-          leading: Icon(Icons.location_on),
+          leading: const Icon(Icons.location_on),
           title: Text(address.house),
           subtitle: Text(
             '${address.street}\n${address.city} ${address.state} ${address.pin}',
@@ -37,7 +37,7 @@ class AddressScreen extends StatelessWidget {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => NewAddressScreen()));
                 },
-                icon: Icon(Icons.edit),
+                icon: const Icon(Icons.edit),
               ),
             ],
           ),

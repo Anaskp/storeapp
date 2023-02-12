@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:e_store/providers/products_provider.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 class CategoryDetailScreen extends StatefulWidget {
-  CategoryDetailScreen({
+  const CategoryDetailScreen({
     Key? key,
     required this.categoryName,
   }) : super(key: key);
@@ -121,7 +119,7 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                           ),
                                           Text(
                                             '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 11,
                                             ),
                                           ),
@@ -157,7 +155,8 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                                                   boxShadow: [
                                                     BoxShadow(
                                                       color: Colors.grey[500]!,
-                                                      offset: Offset(4, 4),
+                                                      offset:
+                                                          const Offset(4, 4),
                                                       blurRadius: 20,
                                                       spreadRadius: 1,
                                                     ),

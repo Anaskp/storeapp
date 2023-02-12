@@ -22,7 +22,7 @@ class AddButton extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.grey[500]!,
-            offset: Offset(4, 4),
+            offset: const Offset(4, 4),
             blurRadius: 20,
             spreadRadius: 1,
           ),

@@ -23,7 +23,7 @@ class HomeScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Welcome ${ap.userName}',
-                style: TextStyle(
+                style: const TextStyle(
                   fontStyle: FontStyle.italic,
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
             const SizedBox(
               height: 10,
             ),
-            CarouselSection(),
+            const CarouselSection(),
             ScrollProductSection(
               color: Colors.green[50]!,
               name: 'Fruits',

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:badges/badges.dart';
 import 'package:e_store/screens/screens.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +19,8 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
   }
 
-  List _pages = [
-    HomeScreen(),
+  final List _pages = [
+    const HomeScreen(),
     const SearchScreen(),
     CartScreen(),
     const ProfileScreen(),
@@ -57,7 +55,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: Badge(
                 badgeContent: Text(
                   cp.count.toString(),
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.white,
                   ),
                 ),

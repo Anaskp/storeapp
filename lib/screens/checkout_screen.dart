@@ -39,27 +39,27 @@ class CheckoutScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            const Text(
               'Please confirm and complete your order',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Divider(
+            const Divider(
               thickness: 3,
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
-            Text(
+            const Text(
               'Payment method',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
@@ -78,7 +78,7 @@ class CheckoutScreen extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
+                    const Text(
                       'Cash On Delivery',
                       style: TextStyle(
                         fontWeight: FontWeight.w600,
@@ -86,7 +86,7 @@ class CheckoutScreen extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () {},
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.radio_button_checked,
                         color: Colors.green,
                       ),
@@ -95,13 +95,13 @@ class CheckoutScreen extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Color(0xffe6e6e6),
+                color: const Color(0xffe6e6e6),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
@@ -112,59 +112,59 @@ class CheckoutScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Price'),
+                        const Text('Price'),
                         Text('₹ ${cp.totalPrice}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Offer Price'),
+                        const Text('Offer Price'),
                         Text('₹ ${cp.totalSalePrice}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Discount'),
+                        const Text('Discount'),
                         Text('${cp.offer.toString()} %'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Delivery'),
+                        const Text('Delivery'),
                         Text(deliveryCharge.toString()),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Packing',
                         ),
                         Text(packingCharge.toString()),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Sub total',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -173,21 +173,21 @@ class CheckoutScreen extends StatelessWidget {
                         ),
                         Text(
                           subTotal.toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                   ],
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             SizedBox(
@@ -197,7 +197,7 @@ class CheckoutScreen extends StatelessWidget {
                 onPressed: () {
                   checkOut(context);
                 },
-                child: Text('Checkout'),
+                child: const Text('Checkout'),
               ),
             ),
           ],
@@ -210,7 +210,7 @@ class CheckoutScreen extends StatelessWidget {
     showDialog(
       context: context,
       builder: (context) {
-        return Center(
+        return const Center(
           child: CircularProgressIndicator(),
         );
       },
@@ -221,12 +221,12 @@ class CheckoutScreen extends StatelessWidget {
     var user = FirebaseAuth.instance.currentUser;
     var firestore = FirebaseFirestore.instance;
 
-    QuerySnapshot _myDoc = await firestore
+    QuerySnapshot myDoc = await firestore
         .collection('users')
         .doc(user!.uid)
         .collection('cart')
         .get();
-    List<DocumentSnapshot> myDocCount = _myDoc.docs;
+    List<DocumentSnapshot> myDocCount = myDoc.docs;
     List productList = [];
     for (var element in myDocCount) {
       productList.add(element.data());
@@ -284,7 +284,7 @@ class CheckoutScreen extends StatelessWidget {
 
     Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-          builder: (context) => MainScreen(),
+          builder: (context) => const MainScreen(),
         ),
         (route) => false);
   }

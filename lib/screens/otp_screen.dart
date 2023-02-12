@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpScreen extends StatefulWidget {
-  OtpScreen({Key? key, required this.verificationId, required this.phoneNumber})
+  const OtpScreen(
+      {Key? key, required this.verificationId, required this.phoneNumber})
       : super(key: key);
 
   final String phoneNumber;
@@ -180,7 +181,7 @@ class _OtpScreenState extends State<OtpScreen> {
               await prefs.setBool('isLogged', true);
               Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(
-                    builder: (context) => MainScreen(),
+                    builder: (context) => const MainScreen(),
                   ),
                   (route) => false);
             } else {
@@ -216,7 +217,7 @@ class OtpInput extends StatelessWidget {
           autofocus: autofocus,
           maxLength: 1,
           keyboardType: TextInputType.number,
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             counter: SizedBox.shrink(),
             border: OutlineInputBorder(),
           ),

@@ -25,7 +25,7 @@ Future<void> main() async {
           create: (_) => CartProvider(),
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     ),
   );
 }
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
         primaryColor: Colors.green[400],
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }

@@ -14,7 +14,7 @@ class OrderDdetailScreen extends StatelessWidget {
         title: Text('#${documentSnapshot.id}'),
       ),
       body: Padding(
-        padding: EdgeInsets.all(8),
+        padding: const EdgeInsets.all(8),
         child: Column(
           children: [
             Expanded(
@@ -46,20 +46,20 @@ class OrderDdetailScreen extends StatelessWidget {
                   );
                 },
                 separatorBuilder: (context, index) {
-                  return SizedBox(
+                  return const SizedBox(
                     height: 5,
                   );
                 },
                 itemCount: documentSnapshot['products'].length,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Container(
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Color(0xffe6e6e6),
+                color: const Color(0xffe6e6e6),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
@@ -70,60 +70,60 @@ class OrderDdetailScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Price'),
+                        const Text('Price'),
                         Text('₹ ${documentSnapshot['totalPrice'].toString()}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Offer Price'),
+                        const Text('Offer Price'),
                         Text(
                             '₹ ${documentSnapshot['totalSalePrice'].toString()}'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Discount'),
+                        const Text('Discount'),
                         Text('${documentSnapshot['offer'].toString()} %'),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('Delivery'),
+                        const Text('Delivery'),
                         Text(documentSnapshot['delivery'].toString()),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Packing',
                         ),
                         Text(documentSnapshot['packing'].toString()),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
+                        const Text(
                           'Total',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -132,14 +132,14 @@ class OrderDdetailScreen extends StatelessWidget {
                         ),
                         Text(
                           documentSnapshot['subTotal'].toString(),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 15,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                   ],

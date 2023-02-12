@@ -1,8 +1,6 @@
 import 'package:e_store/screens/screens.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import '../providers/providers.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -31,13 +29,13 @@ class ProfileScreen extends StatelessWidget {
                   tileWidget(
                     Icons.shopping_bag,
                     'Orders',
-                    OrderScreen(),
+                    const OrderScreen(),
                     context,
                   ),
                   tileWidget(
                     Icons.home,
                     'Address',
-                    AddressScreen(),
+                    const AddressScreen(),
                     context,
                   ),
                 ],
@@ -82,7 +80,7 @@ class ProfileScreen extends StatelessWidget {
       child: Card(
         child: ListTile(
           title: Text(title),
-          trailing: Icon(
+          trailing: const Icon(
             Icons.chevron_right,
           ),
           leading: Icon(icon),

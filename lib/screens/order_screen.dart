@@ -17,7 +17,7 @@ class OrderScreen extends StatelessWidget {
         .snapshots();
     return Scaffold(
       appBar: AppBar(
-        title: Text('Orders'),
+        title: const Text('Orders'),
         centerTitle: true,
       ),
       body: Padding(
@@ -67,9 +67,8 @@ class OrderScreen extends StatelessWidget {
                       for (var i = 0;
                           i < documentSnapshot['products'].length;
                           i++) {
-                        title = title +
-                            documentSnapshot['products'][i]['name'] +
-                            ' ';
+                        title =
+                            '${title + documentSnapshot['products'][i]['name']} ';
                       }
 
                       return InkWell(
@@ -94,14 +93,14 @@ class OrderScreen extends StatelessWidget {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Text(
                                         '₹ ${documentSnapshot['totalSalePrice'].toString()}'),
                                   ],
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 10,
                                 ),
                                 Row(
@@ -111,7 +110,7 @@ class OrderScreen extends StatelessWidget {
                                         'Order #${documentSnapshot.id}\n${documentSnapshot['date']} ${documentSnapshot['time']}',
                                       ),
                                     ),
-                                    SizedBox(
+                                    const SizedBox(
                                       width: 10,
                                     ),
                                     Container(
@@ -119,7 +118,7 @@ class OrderScreen extends StatelessWidget {
                                           borderRadius:
                                               BorderRadius.circular(5),
                                           color: documentSnapshot['status'] ==
-                                                  'ordered'
+                                                  'Completed'
                                               ? Colors.green[300]
                                               : Colors.grey[300],
                                         ),
@@ -127,7 +126,7 @@ class OrderScreen extends StatelessWidget {
                                           padding: const EdgeInsets.all(5),
                                           child: Text(
                                             documentSnapshot['status'],
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 12,
                                             ),
                                           ),
@@ -141,7 +140,7 @@ class OrderScreen extends StatelessWidget {
                       );
                     },
                     separatorBuilder: (context, index) {
-                      return Divider(
+                      return const Divider(
                         thickness: 3,
                         height: 0,
                       );

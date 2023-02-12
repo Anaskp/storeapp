@@ -32,14 +32,14 @@ class MobileLogin extends StatelessWidget {
                   'assets/images/logo.png',
                   width: 200,
                 ),
-                Text(
+                const Text(
                   'Groceries \ndelivered in \n10 minutes',
                   style: TextStyle(
                       fontSize: 32,
                       color: Colors.white,
                       fontWeight: FontWeight.w600),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Container(
@@ -53,13 +53,13 @@ class MobileLogin extends StatelessWidget {
                     padding: const EdgeInsets.all(16),
                     child: Row(
                       children: [
-                        Text(
+                        const Text(
                           '+91',
                           style: TextStyle(
                             fontSize: 17,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 15,
                         ),
                         Expanded(
@@ -67,7 +67,7 @@ class MobileLogin extends StatelessWidget {
                           controller: phoneController,
                           maxLength: 10,
                           keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             contentPadding: EdgeInsets.only(bottom: 4),
                             counter: SizedBox.shrink(),
                             border: InputBorder.none,
@@ -78,7 +78,7 @@ class MobileLogin extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 15,
                 ),
                 SizedBox(

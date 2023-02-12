@@ -71,8 +71,8 @@ class _CarouselSectionState extends State<CarouselSection> {
   }
 
   Future getImageSliderFromDb() async {
-    var _fireStore = FirebaseFirestore.instance;
-    QuerySnapshot snapShot = await _fireStore.collection('carousel').get();
+    var fireStore = FirebaseFirestore.instance;
+    QuerySnapshot snapShot = await fireStore.collection('carousel').get();
 
     setState(() {
       _dataLength = snapShot.docs.length;
@@ -99,7 +99,8 @@ class _CarouselSectionState extends State<CarouselSection> {
                       )
                     : CarouselSlider.builder(
                         itemCount: snapshot.data.length,
-                        itemBuilder: (BuildContext context, int index, int) {
+                        itemBuilder:
+                            (BuildContext context, int index, int num) {
                           DocumentSnapshot sliderImage = snapshot.data[index];
                           Map data = sliderImage.data() as Map;
 

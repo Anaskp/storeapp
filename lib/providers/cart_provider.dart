@@ -31,12 +31,12 @@ class CartProvider with ChangeNotifier {
 
   fetchCart(context) async {
     try {
-      QuerySnapshot _myDoc = await firestore
+      QuerySnapshot myDoc = await firestore
           .collection('users')
           .doc(_userId)
           .collection('cart')
           .get();
-      List<DocumentSnapshot> myDocCount = _myDoc.docs;
+      List<DocumentSnapshot> myDocCount = myDoc.docs;
       List productList = [];
       for (var element in myDocCount) {
         productList.add(element.data());
