@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_store/screens/screens.dart';
+import 'package:e_store/widgets/product_card_widget.dart';
 import 'package:flutter/material.dart';
 
 class CategoryDetailScreen extends StatefulWidget {
@@ -84,125 +85,127 @@ class _CategoryDetailScreenState extends State<CategoryDetailScreen> {
                             DocumentSnapshot documentSnapshot =
                                 snapshot.data!.docs[index];
 
-                            return InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                    builder: (context) => ProductDetailScreen(
-                                        documentSnapshot: documentSnapshot),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 140,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(12),
-                                  child: Stack(
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Expanded(
-                                            child: Align(
-                                                alignment: Alignment.center,
-                                                child: Image.network(
-                                                    documentSnapshot['url'])),
-                                          ),
-                                          Text(
-                                            documentSnapshot['name'],
-                                            maxLines: 2,
-                                          ),
-                                          Text(
-                                            '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                    documentSnapshot[
-                                                        'originalPrice'],
-                                                    style: TextStyle(
-                                                      fontSize: 10,
-                                                      decoration: TextDecoration
-                                                          .lineThrough,
-                                                      color: Colors.grey[700],
-                                                    ),
-                                                  ),
-                                                  Text(
-                                                    documentSnapshot[
-                                                        'salePrice'],
-                                                  ),
-                                                ],
-                                              ),
-                                              DecoratedBox(
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  borderRadius:
-                                                      BorderRadius.circular(8),
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey[500]!,
-                                                      offset:
-                                                          const Offset(4, 4),
-                                                      blurRadius: 20,
-                                                      spreadRadius: 1,
-                                                    ),
-                                                    const BoxShadow(
-                                                      color: Colors.white,
-                                                      offset: Offset(-4, -4),
-                                                      blurRadius: 20,
-                                                      spreadRadius: 1,
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: IconButton(
-                                                  icon: const Icon(
-                                                    Icons.add,
-                                                    color: Colors.pink,
-                                                  ),
-                                                  onPressed: () {},
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                      int.parse(documentSnapshot['offer']) > 0
-                                          ? Positioned(
-                                              top: 0,
-                                              right: 0,
-                                              child: CircleAvatar(
-                                                backgroundColor:
-                                                    Colors.green[200],
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(4.0),
-                                                  child: Text(
-                                                    '${documentSnapshot['offer']}%',
-                                                    style: const TextStyle(
-                                                        color: Colors.black),
-                                                  ),
-                                                ),
-                                              ))
-                                          : const SizedBox.shrink(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            );
+                            return ProductCard(
+                                documentSnapshot: documentSnapshot);
+                            // return InkWell(
+                            //   onTap: () {
+                            //     Navigator.of(context).push(
+                            //       MaterialPageRoute(
+                            //         builder: (context) => ProductDetailScreen(
+                            //             documentSnapshot: documentSnapshot),
+                            //       ),
+                            //     );
+                            //   },
+                            //   child: Container(
+                            //     width: 140,
+                            //     decoration: BoxDecoration(
+                            //       color: Colors.white,
+                            //       borderRadius: BorderRadius.circular(10),
+                            //     ),
+                            //     child: Padding(
+                            //       padding: const EdgeInsets.all(12),
+                            //       child: Stack(
+                            //         children: [
+                            //           Column(
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.start,
+                            //             children: [
+                            //               Expanded(
+                            //                 child: Align(
+                            //                     alignment: Alignment.center,
+                            //                     child: Image.network(
+                            //                         documentSnapshot['url'])),
+                            //               ),
+                            //               Text(
+                            //                 documentSnapshot['name'],
+                            //                 maxLines: 2,
+                            //               ),
+                            //               Text(
+                            //                 '${documentSnapshot['qty']} ${documentSnapshot['qtyMeasure']}',
+                            //                 style: const TextStyle(
+                            //                   fontSize: 11,
+                            //                 ),
+                            //               ),
+                            //               Row(
+                            //                 mainAxisAlignment:
+                            //                     MainAxisAlignment.spaceBetween,
+                            //                 children: [
+                            //                   Column(
+                            //                     crossAxisAlignment:
+                            //                         CrossAxisAlignment.start,
+                            //                     children: [
+                            //                       Text(
+                            //                         documentSnapshot[
+                            //                             'originalPrice'],
+                            //                         style: TextStyle(
+                            //                           fontSize: 10,
+                            //                           decoration: TextDecoration
+                            //                               .lineThrough,
+                            //                           color: Colors.grey[700],
+                            //                         ),
+                            //                       ),
+                            //                       Text(
+                            //                         documentSnapshot[
+                            //                             'salePrice'],
+                            //                       ),
+                            //                     ],
+                            //                   ),
+                            //                   DecoratedBox(
+                            //                     decoration: BoxDecoration(
+                            //                       color: Colors.white,
+                            //                       borderRadius:
+                            //                           BorderRadius.circular(8),
+                            //                       boxShadow: [
+                            //                         BoxShadow(
+                            //                           color: Colors.grey[500]!,
+                            //                           offset:
+                            //                               const Offset(4, 4),
+                            //                           blurRadius: 20,
+                            //                           spreadRadius: 1,
+                            //                         ),
+                            //                         const BoxShadow(
+                            //                           color: Colors.white,
+                            //                           offset: Offset(-4, -4),
+                            //                           blurRadius: 20,
+                            //                           spreadRadius: 1,
+                            //                         ),
+                            //                       ],
+                            //                     ),
+                            //                     child: IconButton(
+                            //                       icon: const Icon(
+                            //                         Icons.add,
+                            //                         color: Colors.pink,
+                            //                       ),
+                            //                       onPressed: () {},
+                            //                     ),
+                            //                   ),
+                            //                 ],
+                            //               ),
+                            //             ],
+                            //           ),
+                            //           int.parse(documentSnapshot['offer']) > 0
+                            //               ? Positioned(
+                            //                   top: 0,
+                            //                   right: 0,
+                            //                   child: CircleAvatar(
+                            //                     backgroundColor:
+                            //                         Colors.green[200],
+                            //                     child: Padding(
+                            //                       padding:
+                            //                           const EdgeInsets.all(4.0),
+                            //                       child: Text(
+                            //                         '${documentSnapshot['offer']}%',
+                            //                         style: const TextStyle(
+                            //                             color: Colors.black),
+                            //                       ),
+                            //                     ),
+                            //                   ))
+                            //               : const SizedBox.shrink(),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //   ),
+                            // );
                           },
                         );
                       } else {
